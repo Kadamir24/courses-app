@@ -2,6 +2,7 @@ import React from 'react';
 import { mockedAuthorsList } from '../../utils/constants';
 import styled from 'styled-components';
 import { Button } from '../Button/Button';
+import { timeConverter } from '../../utils/functions';
 
 const CardContainer = styled.div`
 	width: 95%;
@@ -18,12 +19,6 @@ const MainInfo = styled.div`
 const SubInfo = styled.div`
 	width: 30%;
 `;
-
-const timeConverter = (num) => {
-	const hours = Math.floor(num / 60);
-	const minutes = num % 60;
-	return hours + ':' + minutes;
-};
 
 const CourseCard = ({
 	title,
@@ -49,7 +44,7 @@ const CourseCard = ({
 					})}
 				</div>
 				<div>Duration: {timeConverter(duration)} hours</div>
-				<div>Created: {creationDate}</div>
+				<div>Created: {creationDate} hours</div>
 				<Button>Show course</Button>
 			</SubInfo>
 		</CardContainer>
