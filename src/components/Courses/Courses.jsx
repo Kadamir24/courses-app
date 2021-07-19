@@ -35,7 +35,9 @@ const Courses = () => {
 
 	return (
 		<CoursesContainer>
-			{!courseCreating ? (
+			{courseCreating ? (
+				<CreateCourse close={setCourseCreating} />
+			) : (
 				<>
 					<CoursesTop>
 						<StyledSearch>
@@ -63,10 +65,6 @@ const Courses = () => {
 								return <CourseCard key={course.id} {...course} />;
 							})}
 					</div>
-				</>
-			) : (
-				<>
-					<CreateCourse close={setCourseCreating} />
 				</>
 			)}
 		</CoursesContainer>

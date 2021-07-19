@@ -2,7 +2,8 @@ import React, { useState, useRef } from 'react';
 import styled from 'styled-components';
 import { Button } from '../Button/Button';
 import { mockedAuthorsList, mockedCoursesList } from '../../utils/constants';
-import { timeConverter, createDate, makeid } from '../../utils/functions';
+import { timeConverter, createDate } from '../../utils/functions';
+import { v4 as uuidv4 } from 'uuid';
 
 const StyledTop = styled.div`
 	margin: 10px 10px;
@@ -57,7 +58,7 @@ const CreateCourse = ({ close }) => {
 	};
 
 	const newCourse = {
-		id: makeid(20),
+		id: uuidv4(),
 		title,
 		description: descr,
 		creationDate: createDate(),
@@ -68,21 +69,20 @@ const CreateCourse = ({ close }) => {
 	const addAuthor = (event) => {
 		event.preventDefault();
 		mockedAuthorsList.push({
-			id: makeid(20),
+			id: uuidv4(),
 			name: authorInput.current.value,
 		});
-		setSwitcher(!switcher);
+		setSwitcher((switcher) => !switcher);
 	};
 
 	const addAuthorToList = (event, author) => {
 		event.preventDefault();
-		setCourseAuthor([...courseAuthor, author]);
+		setCourseAuthor((courseAuthor) => [...courseAuthor, author]);
 		setAuthorList(authorList.filter((item) => item.id !== author.id));
 	};
 
-	const removeAuthorToList = (event, author) => {
-		event.preventDefault();
-		setAuthorList([...authorList, author]);
+	const removeAuthorToList = (author) => {
+		setAuthorList((authorList) => [...authorList, author]);
 		setCourseAuthor(courseAuthor.filter((item) => item.id !== author.id));
 	};
 
@@ -177,7 +177,7 @@ const CreateCourse = ({ close }) => {
 						return (
 							<StyledAuthorsList key={author.id}>
 								<div>{author.name}</div>
-								<Button onClick={(e) => removeAuthorToList(e, author)}>
+								<Button onClick={() => removeAuthorToList(author)}>
 									delete Author
 								</Button>
 							</StyledAuthorsList>
