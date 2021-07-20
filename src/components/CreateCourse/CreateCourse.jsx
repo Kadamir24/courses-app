@@ -4,6 +4,7 @@ import { Button } from '../Button/Button';
 import { mockedAuthorsList, mockedCoursesList } from '../../utils/constants';
 import { timeConverter, createDate } from '../../utils/functions';
 import { v4 as uuidv4 } from 'uuid';
+import InputField from '../Input/Input';
 
 const StyledTop = styled.div`
 	margin: 10px 10px;
@@ -124,7 +125,7 @@ const CreateCourse = ({
 			<StyledTop>
 				<div>
 					<div>Title</div>
-					<input
+					<InputField
 						type='text'
 						name='title'
 						placeholder='Enter title'
@@ -174,7 +175,7 @@ const CreateCourse = ({
 				<StyledLeftColumn>
 					<div>
 						<div>Duration</div>
-						<input
+						<InputField
 							type='number'
 							name='duration'
 							placeholder='enter duration'

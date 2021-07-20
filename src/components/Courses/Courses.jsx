@@ -4,6 +4,7 @@ import CourseCard from '../CourseCard/CourseCard';
 import CreateCourse from '../CreateCourse/CreateCourse';
 import { Button } from '../Button/Button';
 import { mockedCoursesList, mockedAuthorsList } from '../../utils/constants';
+import InputField from '../Input/Input';
 
 const CoursesContainer = styled.div`
 	width: 80%;
