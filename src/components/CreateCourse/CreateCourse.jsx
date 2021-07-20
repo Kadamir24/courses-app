@@ -1,7 +1,6 @@
 import React, { useState, useRef } from 'react';
 import styled from 'styled-components';
 import { Button } from '../Button/Button';
-import { mockedAuthorsList, mockedCoursesList } from '../../utils/constants';
 import { timeConverter, createDate } from '../../utils/functions';
 import { v4 as uuidv4 } from 'uuid';
 import InputField from '../Input/Input';
@@ -86,12 +85,16 @@ const CreateCourse = ({
 	const addAuthorToList = (event, author) => {
 		event.preventDefault();
 		setCourseAuthor((courseAuthor) => [...courseAuthor, author]);
-		setAuthorList(authorList.filter((item) => item.id !== author.id));
+		setAuthorList((authorList) =>
+			authorList.filter((item) => item.id !== author.id)
+		);
 	};
 
 	const removeAuthorToList = (author) => {
 		setAuthorList((authorList) => [...authorList, author]);
-		setCourseAuthor(courseAuthor.filter((item) => item.id !== author.id));
+		setCourseAuthor((courseAuthor) =>
+			courseAuthor.filter((item) => item.id !== author.id)
+		);
 	};
 
 	const handleDuration = (event) => {

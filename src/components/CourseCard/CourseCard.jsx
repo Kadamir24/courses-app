@@ -1,5 +1,4 @@
 import React from 'react';
-import { mockedAuthorsList } from '../../utils/constants';
 import styled from 'styled-components';
 import { Button } from '../Button/Button';
 import { timeConverter } from '../../utils/functions';

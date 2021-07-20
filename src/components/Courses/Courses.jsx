@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import CourseCard from '../CourseCard/CourseCard';
 import CreateCourse from '../CreateCourse/CreateCourse';
@@ -29,13 +29,16 @@ const Courses = () => {
 	const [courseCreating, setCourseCreating] = useState(false);
 	const [courseList, setCourseList] = useState(mockedCoursesList);
 	const [authorsList, setAuthorsList] = useState(mockedAuthorsList);
-	const textInput = useRef(null);
+	const [curInput, setCurInput] = useState('');
 
 	const goSearch = (event) => {
 		event.preventDefault();
-		setSearch(textInput.current.value);
+		setSearch(curInput);
 	};
-	console.log('Check precommitYOHOHO24');
+
+	const handleChange = (event) => {
+		setCurInput(event.target.value);
+	};
 
 	return (
 		<CoursesContainer>
@@ -52,10 +55,10 @@ const Courses = () => {
 					<CoursesTop>
 						<StyledSearch>
 							<form onSubmit={goSearch}>
-								<input
+								<InputField
 									type='text'
 									placeholder='Enter course name...'
-									ref={textInput}
+									onChange={handleChange}
 								/>
 								<Button type='submit'>Search</Button>
 							</form>
