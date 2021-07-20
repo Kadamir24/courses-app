@@ -34,7 +34,7 @@ const Courses = () => {
 		event.preventDefault();
 		setSearch(textInput.current.value);
 	};
-	console.log('Check precommitYOHOHO');
+	console.log('Check precommitYOHOHO24');
 
 	return (
 		<CoursesContainer>
