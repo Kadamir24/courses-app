@@ -26,6 +26,7 @@ const CourseCard = ({
 	authors,
 	duration,
 	creationDate,
+	authorsList,
 }) => {
 	return (
 		<CardContainer>
@@ -36,10 +37,8 @@ const CourseCard = ({
 			<SubInfo>
 				<div>
 					Authors:{' '}
-					{mockedAuthorsList.map((author) => {
-						let res = authors.map((id) =>
-							id === author.id ? author.name : ''
-						);
+					{authorsList.map((author) => {
+						let res = authors.includes(author.id) ? author.name + ', ' : '';
 						return res;
 					})}
 				</div>

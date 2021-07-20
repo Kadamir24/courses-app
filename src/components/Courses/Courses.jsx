@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import CourseCard from '../CourseCard/CourseCard';
 import CreateCourse from '../CreateCourse/CreateCourse';
 import { Button } from '../Button/Button';
-import { mockedCoursesList } from '../../utils/constants';
+import { mockedCoursesList, mockedAuthorsList } from '../../utils/constants';
 
 const CoursesContainer = styled.div`
 	width: 80%;
@@ -26,17 +26,25 @@ const StyledSearch = styled.div`
 const Courses = () => {
 	const [search, setSearch] = useState('');
 	const [courseCreating, setCourseCreating] = useState(false);
+	const [courseList, setCourseList] = useState(mockedCoursesList);
+	const [authorsList, setAuthorsList] = useState(mockedAuthorsList);
 	const textInput = useRef(null);
 
 	const goSearch = (event) => {
 		event.preventDefault();
 		setSearch(textInput.current.value);
 	};
-
+	console.log('Check precommit');
 	return (
 		<CoursesContainer>
 			{courseCreating ? (
-				<CreateCourse close={setCourseCreating} />
+				<CreateCourse
+					close={setCourseCreating}
+					addNewCourse={setCourseList}
+					courseList={courseList}
+					authorsList={authorsList}
+					addNewAuthors={setAuthorsList}
+				/>
 			) : (
 				<>
 					<CoursesTop>
@@ -55,14 +63,20 @@ const Courses = () => {
 						</Button>
 					</CoursesTop>
 					<div>
-						{mockedCoursesList
+						{courseList
 							.filter(
 								(item) =>
 									item.title.toLowerCase().includes(search.toLowerCase()) ||
 									item.id.toLowerCase().includes(search.toLowerCase())
 							)
 							.map((course) => {
-								return <CourseCard key={course.id} {...course} />;
+								return (
+									<CourseCard
+										key={course.id}
+										authorsList={authorsList}
+										{...course}
+									/>
+								);
 							})}
 					</div>
 				</>

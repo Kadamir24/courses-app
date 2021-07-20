@@ -40,12 +40,17 @@ const InputAuthor = styled.input`
 	width: 100%;
 `;
 
-const CreateCourse = ({ close }) => {
+const CreateCourse = ({
+	close,
+	addNewCourse,
+	courseList,
+	authorsList,
+	addNewAuthors,
+}) => {
 	const authorInput = useRef(null);
-	const [switcher, setSwitcher] = useState(false);
 	const [duration, setDuration] = useState('');
 	const [courseAuthor, setCourseAuthor] = useState([]);
-	const [authorList, setAuthorList] = useState(mockedAuthorsList);
+	const [authorList, setAuthorList] = useState(authorsList);
 	const [title, setTitle] = useState('');
 	const [descr, setDescr] = useState('');
 
@@ -68,11 +73,13 @@ const CreateCourse = ({ close }) => {
 
 	const addAuthor = (event) => {
 		event.preventDefault();
-		mockedAuthorsList.push({
+		if (!authorInput.current.value) return;
+		const newAuthor = {
 			id: uuidv4(),
 			name: authorInput.current.value,
-		});
-		setSwitcher((switcher) => !switcher);
+		};
+		addNewAuthors((authorsList) => [...authorsList, newAuthor]);
+		setAuthorList((authorList) => [...authorList, newAuthor]);
 	};
 
 	const addAuthorToList = (event, author) => {
@@ -87,6 +94,9 @@ const CreateCourse = ({ close }) => {
 	};
 
 	const handleDuration = (event) => {
+		if (event.target.value < 0) {
+			event.target.value = 0;
+		}
 		setDuration(event.target.value);
 	};
 
@@ -101,8 +111,10 @@ const CreateCourse = ({ close }) => {
 		) {
 			alert('Please, fill in all fields');
 		} else {
-			console.log(newCourse);
-			mockedCoursesList.push(newCourse);
+			addNewCourse((courseList) => [
+				...courseList,
+				{ ...newCourse, authors: courseAuthor.map((item) => item.id) },
+			]);
 			close(false);
 		}
 	};
