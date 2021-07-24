@@ -66,6 +66,21 @@ const CreateCourse = ({
 		fetchAuthors();
 	}, []);
 
+	const fetchWithToken = (path, item, token) => {
+		const options = {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+				Authorization: `${token}`,
+			},
+			body: JSON.stringify(item),
+		};
+
+		fetch(`http://localhost:3000/${path}`, options).then((data) => {
+			return data.json();
+		});
+	};
+
 	const fetchAuthors = () => {
 		const fetchData = async () => {
 			const result = await fetch('http://localhost:3000/authors/all');
@@ -96,18 +111,8 @@ const CreateCourse = ({
 		const newAuthor = {
 			name: authorInput.current.value,
 		};
-		const options = {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-				Authorization: `${token}`,
-			},
-			body: JSON.stringify(newAuthor),
-		};
 
-		fetch('http://localhost:3000/authors/add', options).then((data) => {
-			return data.json();
-		});
+		fetchWithToken('authors/add', newAuthor, token);
 		fetchAuthors();
 	};
 
@@ -149,19 +154,7 @@ const CreateCourse = ({
 				duration: Number(duration),
 				authors: courseAuthor.map((item) => item.id),
 			};
-
-			const options = {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-					Authorization: `${token}`,
-				},
-				body: JSON.stringify(newCourse),
-			};
-
-			fetch('http://localhost:3000/courses/add', options).then((data) => {
-				return data.json();
-			});
+			fetchWithToken('courses/add', newCourse, token);
 			history.push('/courses');
 		}
 	};
