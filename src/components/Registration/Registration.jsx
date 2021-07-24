@@ -3,6 +3,14 @@ import InputField from '../Input/Input';
 import { Button } from '../Button/Button';
 import { Link, useHistory } from 'react-router-dom';
 import { fetchDataRegister } from '../../utils/functions';
+import styled from 'styled-components';
+
+const FormStyled = styled.form`
+	width: 80%;
+	margin: 20px auto;
+	border: 2px solid red;
+	text-align: center;
+`;
 
 const Registration = () => {
 	const [name, setName] = useState('');
@@ -36,7 +44,7 @@ const Registration = () => {
 	};
 
 	return (
-		<form onSubmit={submitForm}>
+		<FormStyled onSubmit={submitForm}>
 			<h1>Registration</h1>
 			<div>
 				<div>Name</div>
@@ -66,7 +74,7 @@ const Registration = () => {
 			<p>
 				If you have an accout you can <Link to='/login'>Login</Link>
 			</p>
-		</form>
+		</FormStyled>
 	);
 };
 

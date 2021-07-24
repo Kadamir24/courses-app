@@ -25,6 +25,17 @@ const StyledSearch = styled.div`
 	height: 30%;
 `;
 
+const ButtonAdd = styled.button`
+	background-color: white;
+	color: black;
+	border: 2px solid #4caf50;
+	height: 50px;
+	:hover {
+		background-color: red;
+		cursor: pointer;
+	}
+`;
+
 const Courses = () => {
 	const [search, setSearch] = useState('');
 	const [courseCreating, setCourseCreating] = useState(false);
@@ -72,11 +83,8 @@ const Courses = () => {
 								<Button type='submit'>Search</Button>
 							</form>
 						</StyledSearch>
-						{/* <Button onClick={() => setCourseCreating(true)}>
-							Add new course
-						</Button> */}
 						<Link to={`/courses/add`}>
-							<Button>Add course</Button>
+							<ButtonAdd>Add course</ButtonAdd>
 						</Link>
 					</CoursesTop>
 					<div>

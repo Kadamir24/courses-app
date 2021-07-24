@@ -31,14 +31,24 @@ const Header = ({ name }) => {
 		localStorage.removeItem('token');
 		history.push(`/login`);
 	};
+
+	const logIn = () => {
+		history.push(`/login`);
+	};
 	return (
 		<StyledHeader>
 			<Logo>
 				<img src={logo} alt='logo' />
 			</Logo>
 			<StyledName>
-				<div>{name}</div>
-				<Button onClick={logOut}>Logout</Button>
+				{localStorage.getItem('token') !== null ? (
+					<>
+						<div>{name}</div>
+						<Button onClick={logOut}>Logout</Button>
+					</>
+				) : (
+					<Button onClick={logIn}>Login</Button>
+				)}
 			</StyledName>
 		</StyledHeader>
 	);

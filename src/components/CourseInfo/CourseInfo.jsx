@@ -22,7 +22,6 @@ const SubInfo = styled.div`
 
 const CourseInfo = () => {
 	const { id } = useParams();
-	const [courseList, setCourseList] = useState([]);
 	const [course, setCourse] = useState();
 	const [authorsList, setAuthorsList] = useState([]);
 	const [loading, setLoading] = useState(true);
@@ -30,7 +29,6 @@ const CourseInfo = () => {
 		const fetchData = async (id) => {
 			const result = await fetch('http://localhost:3000/courses/all');
 			const res = await result.json();
-			setCourseList(res.result);
 			const newCourse = res.result.find((item) => item.id === id);
 			setCourse(() => newCourse);
 			if (newCourse !== undefined) {

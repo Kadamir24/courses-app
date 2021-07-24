@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import { Button } from '../Button/Button';
-import { timeConverter, createDate } from '../../utils/functions';
-import { v4 as uuidv4 } from 'uuid';
+import { timeConverter } from '../../utils/functions';
 import InputField from '../Input/Input';
 import { useHistory } from 'react-router';
 
@@ -57,20 +56,24 @@ const CreateCourse = ({
 	const authorInput = useRef(null);
 	const [duration, setDuration] = useState('');
 	const [courseAuthor, setCourseAuthor] = useState([]);
-	// const [authorList, setAuthorList] = useState(authorsList);
 	const [authorList, setAuthorList] = useState([]);
 	const [title, setTitle] = useState('');
 	const [descr, setDescr] = useState('');
 	const history = useHistory();
+	const token = localStorage.getItem('token');
 
 	useEffect(() => {
+		fetchAuthors();
+	}, []);
+
+	const fetchAuthors = () => {
 		const fetchData = async () => {
 			const result = await fetch('http://localhost:3000/authors/all');
 			const res = await result.json();
 			setAuthorList(res.result);
 		};
 		fetchData();
-	}, []);
+	};
 
 	const handleTitle = (event) => {
 		setTitle(event.target.value);
@@ -80,11 +83,9 @@ const CreateCourse = ({
 		setDescr(event.target.value);
 	};
 
-	const newCourse = {
-		// id: uuidv4(),
+	let newCourse = {
 		title,
 		description: descr,
-		creationDate: createDate(),
 		duration,
 		authors: courseAuthor,
 	};
@@ -93,11 +94,21 @@ const CreateCourse = ({
 		event.preventDefault();
 		if (!authorInput.current.value) return;
 		const newAuthor = {
-			id: uuidv4(),
 			name: authorInput.current.value,
 		};
-		// addNewAuthors((authorsList) => [...authorsList, newAuthor]);
-		setAuthorList((authorList) => [...authorList, newAuthor]);
+		const options = {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+				Authorization: `${token}`,
+			},
+			body: JSON.stringify(newAuthor),
+		};
+
+		fetch('http://localhost:3000/authors/add', options).then((data) => {
+			return data.json();
+		});
+		fetchAuthors();
 	};
 
 	const addAuthorToList = (event, author) => {
@@ -133,16 +144,17 @@ const CreateCourse = ({
 		) {
 			alert('Please, fill in all fields');
 		} else {
-			// addNewCourse((courseList) => [
-			// 	...courseList,
-			// 	{ ...newCourse, authors: courseAuthor.map((item) => item.id) },
-			// ]);
-			// close(false);
+			newCourse = {
+				...newCourse,
+				duration: Number(duration),
+				authors: courseAuthor.map((item) => item.id),
+			};
 
 			const options = {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
+					Authorization: `${token}`,
 				},
 				body: JSON.stringify(newCourse),
 			};

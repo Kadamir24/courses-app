@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { Button } from '../Button/Button';
 import { timeConverter } from '../../utils/functions';
 import { Link } from 'react-router-dom';
+import PropTypes, { string } from 'prop-types';
 
 const CardContainer = styled.div`
 	width: 95%;
@@ -51,6 +52,16 @@ const CourseCard = ({
 			</SubInfo>
 		</CardContainer>
 	);
+};
+
+CourseCard.propTypes = {
+	title: PropTypes.string,
+	description: PropTypes.string,
+	authors: PropTypes.array,
+	duration: PropTypes.number,
+	creationDate: PropTypes.string,
+	authorsList: PropTypes.array,
+	id: PropTypes.string,
 };
 
 export default CourseCard;

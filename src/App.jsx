@@ -6,10 +6,11 @@ import CourseInfo from './components/CourseInfo/CourseInfo';
 import CreateCourse from './components/CreateCourse/CreateCourse';
 import './App.css';
 import { Switch, Route } from 'react-router-dom';
+import { BrowserRouter } from 'react-router-dom';
 
 function App() {
 	return (
-		<>
+		<BrowserRouter>
 			<Header name={''} />
 			<Switch>
 				<Route path='/login' component={Login} />
@@ -18,7 +19,7 @@ function App() {
 				<Route exact path='/courses/add' component={CreateCourse} />
 				<Route path='/courses/:id' component={CourseInfo} />
 			</Switch>
-		</>
+		</BrowserRouter>
 	);
 }
 
