@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import CourseCard from '../CourseCard/CourseCard';
 import CreateCourse from '../CreateCourse/CreateCourse';
 import { Button } from '../Button/Button';
-import { mockedCoursesList, mockedAuthorsList } from '../../utils/constants';
 import InputField from '../Input/Input';
+import { Link } from 'react-router-dom';
+import { fetchDataGo } from '../../utils/functions';
 
 const CoursesContainer = styled.div`
 	width: 80%;
@@ -27,9 +28,17 @@ const StyledSearch = styled.div`
 const Courses = () => {
 	const [search, setSearch] = useState('');
 	const [courseCreating, setCourseCreating] = useState(false);
-	const [courseList, setCourseList] = useState(mockedCoursesList);
-	const [authorsList, setAuthorsList] = useState(mockedAuthorsList);
+	const [courseList, setCourseList] = useState([]);
+	const [authorsList, setAuthorsList] = useState([]);
 	const [curInput, setCurInput] = useState('');
+
+	useEffect(() => {
+		fetchDataGo('courses/all', setCourseList);
+	}, []);
+
+	useEffect(() => {
+		fetchDataGo('authors/all', setAuthorsList);
+	}, []);
 
 	const goSearch = (event) => {
 		event.preventDefault();
@@ -63,9 +72,12 @@ const Courses = () => {
 								<Button type='submit'>Search</Button>
 							</form>
 						</StyledSearch>
-						<Button onClick={() => setCourseCreating(true)}>
+						{/* <Button onClick={() => setCourseCreating(true)}>
 							Add new course
-						</Button>
+						</Button> */}
+						<Link to={`/courses/add`}>
+							<Button>Add course</Button>
+						</Link>
 					</CoursesTop>
 					<div>
 						{courseList

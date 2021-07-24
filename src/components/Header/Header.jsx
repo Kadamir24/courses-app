@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import logo from '../../logo.svg';
 import { Button } from '../Button/Button';
+import { useHistory } from 'react-router-dom';
 
 const StyledHeader = styled.div`
 	width: 80%;
@@ -24,6 +25,12 @@ const Logo = styled.div`
 `;
 
 const Header = ({ name }) => {
+	const history = useHistory();
+
+	const logOut = () => {
+		localStorage.removeItem('token');
+		history.push(`/login`);
+	};
 	return (
 		<StyledHeader>
 			<Logo>
@@ -31,7 +38,7 @@ const Header = ({ name }) => {
 			</Logo>
 			<StyledName>
 				<div>{name}</div>
-				<Button>Logout</Button>
+				<Button onClick={logOut}>Logout</Button>
 			</StyledName>
 		</StyledHeader>
 	);

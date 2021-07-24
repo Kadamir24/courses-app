@@ -15,3 +15,53 @@ export const createDate = () => {
 	today = mm + '/' + dd + '/' + yyyy;
 	return today;
 };
+
+export const fetchDataRegister = (newItem, query) => {
+	const options = {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json',
+		},
+		body: JSON.stringify(newItem),
+	};
+
+	fetch(`http://localhost:3000/${query}`, options).then((data) => {
+		if (!data.ok) {
+			alert('Not Ok');
+		}
+		return data.json();
+	});
+};
+
+export const fetchLogin = (user, history) => {
+	const options = {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json',
+		},
+		body: JSON.stringify(user),
+	};
+
+	fetch('http://localhost:3000/login', options)
+		.then((data) => {
+			if (!data.ok) {
+				alert('Not found');
+			}
+			return data.json();
+		})
+		.then((json) => localStorage.setItem('token', json.result))
+		.then(() =>
+			localStorage.getItem('token') !== 'undefined'
+				? history.push('/courses')
+				: ''
+		);
+};
+
+export const fetchDataGo = (path, setSomething) => {
+	const fetchData = async () => {
+		const result = await fetch(`http://localhost:3000/${path}`);
+		const res = await result.json();
+		setSomething(res.result);
+	};
+	fetchData();
+};

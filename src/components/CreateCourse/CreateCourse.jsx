@@ -1,9 +1,16 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import { Button } from '../Button/Button';
 import { timeConverter, createDate } from '../../utils/functions';
 import { v4 as uuidv4 } from 'uuid';
 import InputField from '../Input/Input';
+import { useHistory } from 'react-router';
+
+const CoursesContainer = styled.div`
+	width: 80%;
+	margin: 20px auto;
+	border: 2px solid red;
+`;
 
 const StyledTop = styled.div`
 	margin: 10px 10px;
@@ -50,9 +57,20 @@ const CreateCourse = ({
 	const authorInput = useRef(null);
 	const [duration, setDuration] = useState('');
 	const [courseAuthor, setCourseAuthor] = useState([]);
-	const [authorList, setAuthorList] = useState(authorsList);
+	// const [authorList, setAuthorList] = useState(authorsList);
+	const [authorList, setAuthorList] = useState([]);
 	const [title, setTitle] = useState('');
 	const [descr, setDescr] = useState('');
+	const history = useHistory();
+
+	useEffect(() => {
+		const fetchData = async () => {
+			const result = await fetch('http://localhost:3000/authors/all');
+			const res = await result.json();
+			setAuthorList(res.result);
+		};
+		fetchData();
+	}, []);
 
 	const handleTitle = (event) => {
 		setTitle(event.target.value);
@@ -63,7 +81,7 @@ const CreateCourse = ({
 	};
 
 	const newCourse = {
-		id: uuidv4(),
+		// id: uuidv4(),
 		title,
 		description: descr,
 		creationDate: createDate(),
@@ -78,7 +96,7 @@ const CreateCourse = ({
 			id: uuidv4(),
 			name: authorInput.current.value,
 		};
-		addNewAuthors((authorsList) => [...authorsList, newAuthor]);
+		// addNewAuthors((authorsList) => [...authorsList, newAuthor]);
 		setAuthorList((authorList) => [...authorList, newAuthor]);
 	};
 
@@ -115,93 +133,108 @@ const CreateCourse = ({
 		) {
 			alert('Please, fill in all fields');
 		} else {
-			addNewCourse((courseList) => [
-				...courseList,
-				{ ...newCourse, authors: courseAuthor.map((item) => item.id) },
-			]);
-			close(false);
+			// addNewCourse((courseList) => [
+			// 	...courseList,
+			// 	{ ...newCourse, authors: courseAuthor.map((item) => item.id) },
+			// ]);
+			// close(false);
+
+			const options = {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify(newCourse),
+			};
+
+			fetch('http://localhost:3000/courses/add', options).then((data) => {
+				return data.json();
+			});
+			history.push('/courses');
 		}
 	};
 
 	return (
-		<form>
-			<StyledTop>
-				<div>
-					<div>Title</div>
-					<InputField
-						type='text'
-						name='title'
-						placeholder='Enter title'
-						onChange={handleTitle}
-					/>
-				</div>
-				<Button onClick={(e) => submitCourse(e, close)}>create course</Button>
-			</StyledTop>
-			<div>
-				<div>Description</div>
-				<DescriptionInput
-					type='text'
-					name='description'
-					placeholder='Enter description'
-					onChange={handleDescr}
-				/>
-			</div>
-			<StyledAuthors>
-				<StyledLeftColumn>
-					<div>Add author</div>
+		<CoursesContainer>
+			<form>
+				<StyledTop>
 					<div>
-						<div>Author's name</div>
-						<InputAuthor
+						<div>Title</div>
+						<InputField
 							type='text'
 							name='title'
-							placeholder='Enter author name'
-							ref={authorInput}
+							placeholder='Enter title'
+							onChange={handleTitle}
 						/>
 					</div>
-					<Button onClick={addAuthor}>create author</Button>
-				</StyledLeftColumn>
-				<StyledRightColumn>
-					<div>Authors</div>
-					{authorList.map((author) => {
-						return (
-							<StyledAuthorsList key={author.id}>
-								<div>{author.name}</div>
-								<Button onClick={(e) => addAuthorToList(e, author)}>
-									add Author
-								</Button>
-							</StyledAuthorsList>
-						);
-					})}
-				</StyledRightColumn>
-			</StyledAuthors>
-			<StyledAuthors>
-				<StyledLeftColumn>
-					<div>
-						<div>Duration</div>
-						<InputField
-							type='number'
-							name='duration'
-							placeholder='enter duration'
-							onChange={handleDuration}
-						/>
-					</div>
-					<h2>Duration: {timeConverter(duration)}</h2>
-				</StyledLeftColumn>
-				<StyledRightColumn>
-					<div>Course authors</div>
-					{courseAuthor.map((author) => {
-						return (
-							<StyledAuthorsList key={author.id}>
-								<div>{author.name}</div>
-								<Button onClick={() => removeAuthorToList(author)}>
-									delete Author
-								</Button>
-							</StyledAuthorsList>
-						);
-					})}
-				</StyledRightColumn>
-			</StyledAuthors>
-		</form>
+					<Button onClick={(e) => submitCourse(e, close)}>create course</Button>
+				</StyledTop>
+				<div>
+					<div>Description</div>
+					<DescriptionInput
+						type='text'
+						name='description'
+						placeholder='Enter description'
+						onChange={handleDescr}
+					/>
+				</div>
+				<StyledAuthors>
+					<StyledLeftColumn>
+						<div>Add author</div>
+						<div>
+							<div>Author's name</div>
+							<InputAuthor
+								type='text'
+								name='title'
+								placeholder='Enter author name'
+								ref={authorInput}
+							/>
+						</div>
+						<Button onClick={addAuthor}>create author</Button>
+					</StyledLeftColumn>
+					<StyledRightColumn>
+						<div>Authors</div>
+						{authorList.map((author) => {
+							return (
+								<StyledAuthorsList key={author.id}>
+									<div>{author.name}</div>
+									<Button onClick={(e) => addAuthorToList(e, author)}>
+										add Author
+									</Button>
+								</StyledAuthorsList>
+							);
+						})}
+					</StyledRightColumn>
+				</StyledAuthors>
+				<StyledAuthors>
+					<StyledLeftColumn>
+						<div>
+							<div>Duration</div>
+							<InputField
+								type='number'
+								name='duration'
+								placeholder='enter duration'
+								onChange={handleDuration}
+							/>
+						</div>
+						<h2>Duration: {timeConverter(duration)}</h2>
+					</StyledLeftColumn>
+					<StyledRightColumn>
+						<div>Course authors</div>
+						{courseAuthor.map((author) => {
+							return (
+								<StyledAuthorsList key={author.id}>
+									<div>{author.name}</div>
+									<Button onClick={() => removeAuthorToList(author)}>
+										delete Author
+									</Button>
+								</StyledAuthorsList>
+							);
+						})}
+					</StyledRightColumn>
+				</StyledAuthors>
+			</form>
+		</CoursesContainer>
 	);
 };
 

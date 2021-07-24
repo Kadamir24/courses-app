@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { Button } from '../Button/Button';
 import { timeConverter } from '../../utils/functions';
+import { Link } from 'react-router-dom';
 
 const CardContainer = styled.div`
 	width: 95%;
@@ -26,6 +27,7 @@ const CourseCard = ({
 	duration,
 	creationDate,
 	authorsList,
+	id,
 }) => {
 	return (
 		<CardContainer>
@@ -43,7 +45,9 @@ const CourseCard = ({
 				</div>
 				<div>Duration: {timeConverter(duration)} hours</div>
 				<div>Created: {creationDate} hours</div>
-				<Button>Show course</Button>
+				<Link to={`/courses/${id}`}>
+					<Button>Show course</Button>
+				</Link>
 			</SubInfo>
 		</CardContainer>
 	);
