@@ -3,13 +3,12 @@ import styled from 'styled-components';
 import { Button } from '../Button/Button';
 import { timeConverter } from '../../utils/functions';
 import { useParams, Link } from 'react-router-dom';
+import { fetchDataGo, fetchDataWithId } from '../../utils/api';
 
 const CardContainer = styled.div`
 	width: 80%;
 	margin: 20px auto;
 	border: 2px solid red;
-	/* display: flex;
-	justify-content: space-around; */
 `;
 
 const MainInfo = styled.div`
@@ -26,25 +25,11 @@ const CourseInfo = () => {
 	const [authorsList, setAuthorsList] = useState([]);
 	const [loading, setLoading] = useState(true);
 	useEffect(() => {
-		const fetchData = async (id) => {
-			const result = await fetch('http://localhost:3000/courses/all');
-			const res = await result.json();
-			const newCourse = res.result.find((item) => item.id === id);
-			setCourse(() => newCourse);
-			if (newCourse !== undefined) {
-				setLoading(false);
-			}
-		};
-		fetchData(id);
+		fetchDataWithId(id, setCourse, setLoading);
 	}, []);
 
 	useEffect(() => {
-		const fetchData = async () => {
-			const result = await fetch('http://localhost:3000/authors/all');
-			const res = await result.json();
-			setAuthorsList(res.result);
-		};
-		fetchData();
+		fetchDataGo('authors/all', setAuthorsList);
 	}, []);
 
 	return (

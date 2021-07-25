@@ -4,6 +4,7 @@ import { Button } from '../Button/Button';
 import { timeConverter } from '../../utils/functions';
 import InputField from '../Input/Input';
 import { useHistory } from 'react-router';
+import { fetchDataGo } from '../../utils/api';
 
 const CoursesContainer = styled.div`
 	width: 80%;
@@ -46,14 +47,9 @@ const InputAuthor = styled.input`
 	width: 100%;
 `;
 
-const CreateCourse = ({
-	close,
-	addNewCourse,
-	courseList,
-	authorsList,
-	addNewAuthors,
-}) => {
-	const authorInput = useRef(null);
+const CreateCourse = () => {
+	// const authorInput = useRef(null);
+	const [authorInput, setAuthorInput] = useState('');
 	const [duration, setDuration] = useState('');
 	const [courseAuthor, setCourseAuthor] = useState([]);
 	const [authorList, setAuthorList] = useState([]);
@@ -76,18 +72,16 @@ const CreateCourse = ({
 			body: JSON.stringify(item),
 		};
 
-		fetch(`http://localhost:3000/${path}`, options).then((data) => {
+		fetch(`${process.env.REACT_APP_BASE_URL}/${path}`, options).then((data) => {
+			if (!data.ok) {
+				alert('Somethin went wrong');
+			}
 			return data.json();
 		});
 	};
 
 	const fetchAuthors = () => {
-		const fetchData = async () => {
-			const result = await fetch('http://localhost:3000/authors/all');
-			const res = await result.json();
-			setAuthorList(res.result);
-		};
-		fetchData();
+		fetchDataGo('authors/all', setAuthorList);
 	};
 
 	const handleTitle = (event) => {
@@ -98,6 +92,10 @@ const CreateCourse = ({
 		setDescr(event.target.value);
 	};
 
+	const handleAuthorInput = (event) => {
+		setAuthorInput(event.target.value);
+	};
+
 	let newCourse = {
 		title,
 		description: descr,
@@ -105,15 +103,15 @@ const CreateCourse = ({
 		authors: courseAuthor,
 	};
 
-	const addAuthor = (event) => {
+	const addAuthor = async (event) => {
 		event.preventDefault();
-		if (!authorInput.current.value) return;
+		if (!authorInput) return;
 		const newAuthor = {
-			name: authorInput.current.value,
+			name: authorInput,
 		};
-
-		fetchWithToken('authors/add', newAuthor, token);
-		fetchAuthors();
+		await fetchWithToken('authors/add', newAuthor, token);
+		await fetchAuthors();
+		setAuthorInput('');
 	};
 
 	const addAuthorToList = (event, author) => {
@@ -138,7 +136,7 @@ const CreateCourse = ({
 		setDuration(event.target.value);
 	};
 
-	const submitCourse = (event, close) => {
+	const submitCourse = async (event) => {
 		event.preventDefault();
 
 		if (
@@ -154,7 +152,7 @@ const CreateCourse = ({
 				duration: Number(duration),
 				authors: courseAuthor.map((item) => item.id),
 			};
-			fetchWithToken('courses/add', newCourse, token);
+			await fetchWithToken('courses/add', newCourse, token);
 			history.push('/courses');
 		}
 	};
@@ -172,7 +170,7 @@ const CreateCourse = ({
 							onChange={handleTitle}
 						/>
 					</div>
-					<Button onClick={(e) => submitCourse(e, close)}>create course</Button>
+					<Button onClick={(e) => submitCourse(e)}>create course</Button>
 				</StyledTop>
 				<div>
 					<div>Description</div>
@@ -192,7 +190,9 @@ const CreateCourse = ({
 								type='text'
 								name='title'
 								placeholder='Enter author name'
-								ref={authorInput}
+								value={authorInput}
+								// ref={authorInput}
+								onChange={handleAuthorInput}
 							/>
 						</div>
 						<Button onClick={addAuthor}>create author</Button>

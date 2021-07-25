@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import CourseCard from '../CourseCard/CourseCard';
-import CreateCourse from '../CreateCourse/CreateCourse';
 import { Button } from '../Button/Button';
 import InputField from '../Input/Input';
 import { Link } from 'react-router-dom';
-import { fetchDataGo } from '../../utils/functions';
+import { fetchDataGo } from '../../utils/api';
 
 const CoursesContainer = styled.div`
 	width: 80%;
@@ -38,7 +37,6 @@ const ButtonAdd = styled.button`
 
 const Courses = () => {
 	const [search, setSearch] = useState('');
-	const [courseCreating, setCourseCreating] = useState(false);
 	const [courseList, setCourseList] = useState([]);
 	const [authorsList, setAuthorsList] = useState([]);
 	const [curInput, setCurInput] = useState('');
@@ -62,50 +60,40 @@ const Courses = () => {
 
 	return (
 		<CoursesContainer>
-			{courseCreating ? (
-				<CreateCourse
-					close={setCourseCreating}
-					addNewCourse={setCourseList}
-					courseList={courseList}
-					authorsList={authorsList}
-					addNewAuthors={setAuthorsList}
-				/>
-			) : (
-				<>
-					<CoursesTop>
-						<StyledSearch>
-							<form onSubmit={goSearch}>
-								<InputField
-									type='text'
-									placeholder='Enter course name...'
-									onChange={handleChange}
+			<>
+				<CoursesTop>
+					<StyledSearch>
+						<form onSubmit={goSearch}>
+							<InputField
+								type='text'
+								placeholder='Enter course name...'
+								onChange={handleChange}
+							/>
+							<Button type='submit'>Search</Button>
+						</form>
+					</StyledSearch>
+					<Link to={`/courses/add`}>
+						<ButtonAdd>Add course</ButtonAdd>
+					</Link>
+				</CoursesTop>
+				<div>
+					{courseList
+						.filter(
+							(item) =>
+								item.title.toLowerCase().includes(search.toLowerCase()) ||
+								item.id.toLowerCase().includes(search.toLowerCase())
+						)
+						.map((course) => {
+							return (
+								<CourseCard
+									key={course.id}
+									authorsList={authorsList}
+									{...course}
 								/>
-								<Button type='submit'>Search</Button>
-							</form>
-						</StyledSearch>
-						<Link to={`/courses/add`}>
-							<ButtonAdd>Add course</ButtonAdd>
-						</Link>
-					</CoursesTop>
-					<div>
-						{courseList
-							.filter(
-								(item) =>
-									item.title.toLowerCase().includes(search.toLowerCase()) ||
-									item.id.toLowerCase().includes(search.toLowerCase())
-							)
-							.map((course) => {
-								return (
-									<CourseCard
-										key={course.id}
-										authorsList={authorsList}
-										{...course}
-									/>
-								);
-							})}
-					</div>
-				</>
-			)}
+							);
+						})}
+				</div>
+			</>
 		</CoursesContainer>
 	);
 };

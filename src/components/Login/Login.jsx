@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import InputField from '../Input/Input';
 import { Button } from '../Button/Button';
 import { Link, useHistory } from 'react-router-dom';
-import { fetchLogin } from '../../utils/functions';
+import { fetchLogin } from '../../utils/api';
 import styled from 'styled-components';
 
 const FormStyled = styled.form`
@@ -12,7 +12,7 @@ const FormStyled = styled.form`
 	text-align: center;
 `;
 
-const Login = () => {
+const Login = ({ changeLog }) => {
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
 	const history = useHistory();
@@ -34,6 +34,7 @@ const Login = () => {
 		};
 
 		fetchLogin(user, history);
+		changeLog(true);
 	};
 
 	return (

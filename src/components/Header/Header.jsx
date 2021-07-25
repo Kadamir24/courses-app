@@ -24,11 +24,12 @@ const Logo = styled.div`
 	height: 10%;
 `;
 
-const Header = ({ name }) => {
+const Header = ({ name, changeLog, isLoggedIn }) => {
 	const history = useHistory();
 
 	const logOut = () => {
 		localStorage.removeItem('token');
+		changeLog(false);
 		history.push(`/login`);
 	};
 
@@ -41,7 +42,7 @@ const Header = ({ name }) => {
 				<img src={logo} alt='logo' />
 			</Logo>
 			<StyledName>
-				{localStorage.getItem('token') !== null ? (
+				{isLoggedIn ? (
 					<>
 						<div>{name}</div>
 						<Button onClick={logOut}>Logout</Button>

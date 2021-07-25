@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import InputField from '../Input/Input';
 import { Button } from '../Button/Button';
 import { Link, useHistory } from 'react-router-dom';
-import { fetchDataRegister } from '../../utils/functions';
+import { fetchDataRegister } from '../../utils/api';
 import styled from 'styled-components';
 
 const FormStyled = styled.form`
@@ -32,7 +32,7 @@ const Registration = () => {
 
 	const submitForm = (event) => {
 		event.preventDefault();
-		console.log(name, email, password);
+
 		const newUser = {
 			name,
 			email,
