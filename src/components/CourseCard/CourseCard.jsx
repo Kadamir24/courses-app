@@ -54,14 +54,14 @@ const CourseCard = ({
 	);
 };
 
-CourseCard.defaultProps = {
-	title: PropTypes.string,
-	description: PropTypes.string,
-	authors: PropTypes.array,
-	duration: PropTypes.number,
-	creationDate: PropTypes.string,
-	authorsList: PropTypes.array,
-	id: PropTypes.string,
+CourseCard.propTypes = {
+	title: PropTypes.string.isRequired,
+	description: PropTypes.string.isRequired,
+	authors: PropTypes.array.isRequired,
+	duration: PropTypes.number.isRequired,
+	creationDate: PropTypes.string.isRequired,
+	authorsList: PropTypes.array.isRequired,
+	id: PropTypes.string.isRequired,
 };
 
 export default CourseCard;
