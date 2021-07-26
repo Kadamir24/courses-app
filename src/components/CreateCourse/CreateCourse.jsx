@@ -1,10 +1,10 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { Button } from '../Button/Button';
 import { timeConverter } from '../../utils/functions';
 import InputField from '../Input/Input';
 import { useHistory } from 'react-router';
-import { fetchDataGo } from '../../utils/api';
+import { fetchDataGo, fetchWithToken } from '../../utils/api';
 
 const CoursesContainer = styled.div`
 	width: 80%;
@@ -48,7 +48,6 @@ const InputAuthor = styled.input`
 `;
 
 const CreateCourse = () => {
-	// const authorInput = useRef(null);
 	const [authorInput, setAuthorInput] = useState('');
 	const [duration, setDuration] = useState('');
 	const [courseAuthor, setCourseAuthor] = useState([]);
@@ -62,26 +61,12 @@ const CreateCourse = () => {
 		fetchAuthors();
 	}, []);
 
-	const fetchWithToken = (path, item, token) => {
-		const options = {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-				Authorization: `${token}`,
-			},
-			body: JSON.stringify(item),
-		};
-
-		fetch(`${process.env.REACT_APP_BASE_URL}/${path}`, options).then((data) => {
-			if (!data.ok) {
-				alert('Somethin went wrong');
-			}
-			return data.json();
-		});
-	};
-
 	const fetchAuthors = () => {
-		fetchDataGo('authors/all', setAuthorList);
+		async function fetchData() {
+			const data = await fetchDataGo('authors/all');
+			setAuthorList(data);
+		}
+		fetchData();
 	};
 
 	const handleTitle = (event) => {
@@ -191,7 +176,6 @@ const CreateCourse = () => {
 								name='title'
 								placeholder='Enter author name'
 								value={authorInput}
-								// ref={authorInput}
 								onChange={handleAuthorInput}
 							/>
 						</div>

@@ -54,7 +54,7 @@ const CourseCard = ({
 	);
 };
 
-CourseCard.defaultTypes = {
+CourseCard.defaultProps = {
 	title: PropTypes.string,
 	description: PropTypes.string,
 	authors: PropTypes.array,

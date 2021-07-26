@@ -42,11 +42,19 @@ const Courses = () => {
 	const [curInput, setCurInput] = useState('');
 
 	useEffect(() => {
-		fetchDataGo('courses/all', setCourseList);
+		async function fetchData() {
+			const data = await fetchDataGo('courses/all');
+			setCourseList(data);
+		}
+		fetchData();
 	}, []);
 
 	useEffect(() => {
-		fetchDataGo('authors/all', setAuthorsList);
+		async function fetchData() {
+			const data = await fetchDataGo('authors/all');
+			setAuthorsList(data);
+		}
+		fetchData();
 	}, []);
 
 	const goSearch = (event) => {

@@ -24,13 +24,13 @@ const Logo = styled.div`
 	height: 10%;
 `;
 
-const Header = ({ name, changeLog, isLoggedIn }) => {
+const Header = ({ name, isLoggedIn }) => {
 	const history = useHistory();
 
 	const logOut = () => {
 		localStorage.removeItem('token');
-		changeLog(false);
 		history.push(`/login`);
+		window.location.reload();
 	};
 
 	const logIn = () => {

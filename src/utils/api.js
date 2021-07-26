@@ -1,3 +1,5 @@
+import { REACT_APP_BASE_URL } from '../env-config';
+
 export const fetchDataRegister = (newItem, query) => {
 	const options = {
 		method: 'POST',
@@ -7,7 +9,7 @@ export const fetchDataRegister = (newItem, query) => {
 		body: JSON.stringify(newItem),
 	};
 
-	fetch(`${process.env.REACT_APP_BASE_URL}/${query}`, options).then((data) => {
+	fetch(`${REACT_APP_BASE_URL}/${query}`, options).then((data) => {
 		if (!data.ok) {
 			alert('Not Ok');
 		}
@@ -24,7 +26,7 @@ export const fetchLogin = (user, history) => {
 		body: JSON.stringify(user),
 	};
 
-	fetch(`${process.env.REACT_APP_BASE_URL}/login`, options)
+	fetch(`${REACT_APP_BASE_URL}/login`, options)
 		.then((data) => {
 			if (!data.ok) {
 				alert('Not found');
@@ -39,28 +41,25 @@ export const fetchLogin = (user, history) => {
 		);
 };
 
-export const fetchDataGo = (path, setSomething) => {
+export const fetchDataGo = async (path) => {
 	const fetchData = async () => {
-		const result = await fetch(`${process.env.REACT_APP_BASE_URL}/${path}`);
+		const result = await fetch(`${REACT_APP_BASE_URL}/${path}`);
 		const res = await result.json();
-		setSomething(res.result);
+		return res.result;
 	};
-	fetchData();
+	const data = await fetchData();
+	return data;
 };
 
-export const fetchDataWithId = (id, setSomething, setLoading) => {
+export const fetchDataWithId = async (id) => {
 	const fetchData = async (id) => {
-		const result = await fetch(
-			`${process.env.REACT_APP_BASE_URL}/courses/${id}`
-		);
+		const result = await fetch(`${REACT_APP_BASE_URL}/courses/${id}`);
 		const res = await result.json();
 		const newCourse = res.result;
-		setSomething(newCourse);
-		if (newCourse !== undefined) {
-			setLoading(false);
-		}
+		return newCourse;
 	};
-	fetchData(id);
+	const nCourse = await fetchData(id);
+	return nCourse;
 };
 
 export const fetchWithToken = (path, item, token) => {
@@ -73,7 +72,7 @@ export const fetchWithToken = (path, item, token) => {
 		body: JSON.stringify(item),
 	};
 
-	fetch(`${process.env.REACT_APP_BASE_URL}/${path}`, options).then((data) => {
+	return fetch(`${REACT_APP_BASE_URL}/${path}`, options).then((data) => {
 		if (!data.ok) {
 			alert('Somethin went wrong');
 		}

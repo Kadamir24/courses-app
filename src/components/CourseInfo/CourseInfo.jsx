@@ -25,11 +25,22 @@ const CourseInfo = () => {
 	const [authorsList, setAuthorsList] = useState([]);
 	const [loading, setLoading] = useState(true);
 	useEffect(() => {
-		fetchDataWithId(id, setCourse, setLoading);
-	}, []);
+		async function fetchAndSet(id) {
+			const newCourse = await fetchDataWithId(id);
+			setCourse(newCourse);
+			if (newCourse !== undefined) {
+				setLoading(false);
+			}
+		}
+		fetchAndSet(id);
+	}, [id]);
 
 	useEffect(() => {
-		fetchDataGo('authors/all', setAuthorsList);
+		async function fetchData() {
+			const data = await fetchDataGo('authors/all');
+			setAuthorsList(data);
+		}
+		fetchData();
 	}, []);
 
 	return (

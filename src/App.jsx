@@ -10,10 +10,7 @@ import { BrowserRouter } from 'react-router-dom';
 import React, { useState } from 'react';
 
 const check = () => {
-	if (localStorage.getItem('token') !== null) {
-		return true;
-	}
-	return false;
+	return localStorage.getItem('token') !== null;
 };
 
 function App() {
@@ -21,7 +18,7 @@ function App() {
 
 	return (
 		<BrowserRouter>
-			<Header name={''} changeLog={setIsLoggedIn} isLoggedIn={isLoggedIn} />
+			<Header name={''} isLoggedIn={isLoggedIn} />
 			<Switch>
 				{isLoggedIn ? (
 					<Switch>
@@ -30,13 +27,13 @@ function App() {
 						<Route exact path='/courses/:id' component={CourseInfo} />
 					</Switch>
 				) : (
-					<>
+					<Switch>
 						<Route
 							path='/login'
 							render={() => <Login changeLog={setIsLoggedIn} />}
 						/>
 						<Route path='/registration' component={Registration} />
-					</>
+					</Switch>
 				)}
 			</Switch>
 		</BrowserRouter>
