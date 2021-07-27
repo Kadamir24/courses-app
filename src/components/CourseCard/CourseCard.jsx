@@ -2,6 +2,8 @@ import React from 'react';
 import styled from 'styled-components';
 import { Button } from '../Button/Button';
 import { timeConverter } from '../../utils/functions';
+import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
 const CardContainer = styled.div`
 	width: 95%;
@@ -26,6 +28,7 @@ const CourseCard = ({
 	duration,
 	creationDate,
 	authorsList,
+	id,
 }) => {
 	return (
 		<CardContainer>
@@ -43,10 +46,22 @@ const CourseCard = ({
 				</div>
 				<div>Duration: {timeConverter(duration)} hours</div>
 				<div>Created: {creationDate} hours</div>
-				<Button>Show course</Button>
+				<Link to={`/courses/${id}`}>
+					<Button>Show course</Button>
+				</Link>
 			</SubInfo>
 		</CardContainer>
 	);
+};
+
+CourseCard.propTypes = {
+	title: PropTypes.string.isRequired,
+	description: PropTypes.string.isRequired,
+	authors: PropTypes.array.isRequired,
+	duration: PropTypes.number.isRequired,
+	creationDate: PropTypes.string.isRequired,
+	authorsList: PropTypes.array.isRequired,
+	id: PropTypes.string.isRequired,
 };
 
 export default CourseCard;
