@@ -30,7 +30,7 @@ const Registration = () => {
 		setPassword(event.target.value);
 	};
 
-	const submitForm = (event) => {
+	const submitForm = async (event) => {
 		event.preventDefault();
 
 		const newUser = {
@@ -39,7 +39,7 @@ const Registration = () => {
 			password,
 		};
 
-		fetchDataRegister(newUser, 'register');
+		await fetchDataRegister(newUser, 'register');
 		history.push(`/login`);
 	};
 

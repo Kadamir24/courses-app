@@ -25,7 +25,7 @@ const Login = ({ changeLog }) => {
 		setPassword(event.target.value);
 	};
 
-	const submitForm = (event) => {
+	const submitForm = async (event) => {
 		event.preventDefault();
 		const user = {
 			name: '',
@@ -33,7 +33,7 @@ const Login = ({ changeLog }) => {
 			password,
 		};
 
-		fetchLogin(user, history);
+		await fetchLogin(user, history);
 		changeLog(true);
 	};
 
