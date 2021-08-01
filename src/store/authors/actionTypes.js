@@ -1,0 +1,5 @@
+export const actionTypes = {
+	GET_AUTHORS: 'GET_AUTHORS',
+	ADD_AUTHOR: 'ADD_AUTHOR',
+	DELETE_AUTHOR: 'DELETE_AUTHOR',
+};

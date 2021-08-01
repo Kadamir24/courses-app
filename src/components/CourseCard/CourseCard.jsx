@@ -4,6 +4,10 @@ import { Button } from '../Button/Button';
 import { timeConverter } from '../../utils/functions';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import { useDispatch } from 'react-redux';
+import { actionCreators } from '../../store/courses/actionCreators';
+import store from '../../store/index';
+import { fetchDelete } from '../../utils/api';
 
 const CardContainer = styled.div`
 	width: 95%;
@@ -30,6 +34,13 @@ const CourseCard = ({
 	authorsList,
 	id,
 }) => {
+	const token = localStorage.getItem('token');
+	const dispatch = useDispatch();
+	const deleteCourse = () => {
+		dispatch(actionCreators.deleteCourse(id));
+		console.log('Check store2', store.getState());
+		fetchDelete('courses', id, token);
+	};
 	return (
 		<CardContainer>
 			<MainInfo>
@@ -49,6 +60,8 @@ const CourseCard = ({
 				<Link to={`/courses/${id}`}>
 					<Button>Show course</Button>
 				</Link>
+				<Button>Update</Button>
+				<Button onClick={deleteCourse}>Delete course</Button>
 			</SubInfo>
 		</CardContainer>
 	);

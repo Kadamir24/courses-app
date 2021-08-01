@@ -26,19 +26,20 @@ export const fetchLogin = (user, history) => {
 		body: JSON.stringify(user),
 	};
 
-	fetch(`${REACT_APP_BASE_URL}/login`, options)
-		.then((data) => {
-			if (!data.ok) {
-				alert('Not found');
-			}
-			return data.json();
-		})
-		.then((json) => localStorage.setItem('token', json.result))
-		.then(() =>
-			localStorage.getItem('token') !== 'undefined'
-				? history.push('/courses')
-				: ''
-		);
+	return fetch(`${REACT_APP_BASE_URL}/login`, options).then((data) => {
+		if (!data.ok) {
+			alert('Not found');
+		}
+		const res = data.json();
+		console.log('chetam', res);
+		return res;
+	});
+	// .then((json) => localStorage.setItem('token', json.result))
+	// .then(() =>
+	// 	localStorage.getItem('token') !== 'undefined'
+	// 		? history.push('/courses')
+	// 		: ''
+	// );
 };
 
 export const fetchDataGo = async (path) => {
@@ -78,4 +79,16 @@ export const fetchWithToken = (path, item, token) => {
 		}
 		return data.json();
 	});
+};
+
+export const fetchDelete = (path, id, token) => {
+	const options = {
+		method: 'DELETE',
+		headers: {
+			'Content-Type': 'application/json',
+			Authorization: `${token}`,
+		},
+	};
+
+	return fetch(`${REACT_APP_BASE_URL}/${path}/${id}`, options);
 };

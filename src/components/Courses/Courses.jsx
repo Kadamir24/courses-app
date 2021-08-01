@@ -5,6 +5,9 @@ import { Button } from '../Button/Button';
 import InputField from '../Input/Input';
 import { Link } from 'react-router-dom';
 import { fetchDataGo } from '../../utils/api';
+import { connect } from 'react-redux';
+import { actionCreators } from '../../store/courses/actionCreators';
+import { actionCreators as actionCreatorsAuthors } from '../../store/authors/actionCreators';
 
 const CoursesContainer = styled.div`
 	width: 80%;
@@ -35,7 +38,7 @@ const ButtonAdd = styled.button`
 	}
 `;
 
-const Courses = () => {
+const Courses = ({ authors, courses, getCourses, getAuthors }) => {
 	const [search, setSearch] = useState('');
 	const [courseList, setCourseList] = useState([]);
 	const [authorsList, setAuthorsList] = useState([]);
@@ -44,16 +47,24 @@ const Courses = () => {
 	useEffect(() => {
 		async function fetchData() {
 			const data = await fetchDataGo('courses/all');
+			getCourses(data);
 			setCourseList(data);
+			setCourseList(courses);
 		}
 		fetchData();
 	}, []);
 
 	useEffect(() => {
+		setCourseList(courses);
+	}, []);
+
+	useEffect(() => {
 		async function fetchData() {
 			const data = await fetchDataGo('authors/all');
-			setAuthorsList(data);
+			getAuthors(data);
+			setAuthorsList(authors);
 		}
+
 		fetchData();
 	}, []);
 
@@ -106,4 +117,18 @@ const Courses = () => {
 	);
 };
 
-export default Courses;
+const mapStateToProps = (state) => {
+	return {
+		authors: state.authors.authors,
+		courses: state.courses.courses,
+	};
+};
+
+const mapDispatchToProps = (dispatch) => {
+	return {
+		getCourses: (data) => dispatch(actionCreators.getCourses(data)),
+		getAuthors: (data) => dispatch(actionCreatorsAuthors.getAuthors(data)),
+	};
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Courses);
