@@ -48,7 +48,7 @@ const Courses = () => {
 	useEffect(() => {
 		async function fetchData() {
 			const data = await fetchDataGo('courses/all');
-			dispatch(actionCreators.getCourses(data));
+			dispatch(actionCreators.setCourses(data));
 		}
 		fetchData();
 	}, [dispatch]);

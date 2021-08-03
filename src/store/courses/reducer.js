@@ -6,7 +6,7 @@ const courseInitialState = {
 
 const courses = (state = courseInitialState, action) => {
 	switch (action.type) {
-		case actionTypes.GET_COURSES:
+		case actionTypes.SET_COURSES:
 			return {
 				...state,
 				courses: action.payload,
@@ -15,7 +15,6 @@ const courses = (state = courseInitialState, action) => {
 			return {
 				...state,
 				courses: state.courses.filter((item) => item.id !== action.payload),
-				// courses: state.courses.find(item => item ),
 			};
 		default:
 			return state;

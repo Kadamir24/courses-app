@@ -240,15 +240,12 @@ const mapStateToProps = (state) => {
 	};
 };
 
-const mapDispatchToProps = (dispatch) => {
-	return {
-		getCourses: (data) => dispatch(actionCreators.getCourses(data)),
-		setAuthors: (data) => dispatch(actionCreatorsAuthors.setAuthors(data)),
-		addAuthorToForm: (author) =>
-			dispatch(actionCreatorsAuthors.addAuthor(author)),
-		deleteAuthor: (id) => dispatch(actionCreatorsAuthors.deleteAuthor(id)),
-		resetForm: () => dispatch(actionCreatorsAuthors.resetForm()),
-	};
+const mapDispatchToProps = {
+	setCourses: (data) => actionCreators.setCourses(data),
+	setAuthors: (data) => actionCreatorsAuthors.setAuthors(data),
+	addAuthorToForm: (author) => actionCreatorsAuthors.addAuthor(author),
+	deleteAuthor: (id) => actionCreatorsAuthors.deleteAuthor(id),
+	resetForm: () => actionCreatorsAuthors.resetForm(),
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(CreateCourse);
