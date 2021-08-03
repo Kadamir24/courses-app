@@ -4,6 +4,8 @@ import { Button } from '../Button/Button';
 import { Link, useHistory } from 'react-router-dom';
 import { fetchLogin } from '../../utils/api';
 import styled from 'styled-components';
+import { useDispatch } from 'react-redux';
+import { actionCreators } from '../../store/user/actionCreators';
 
 const FormStyled = styled.form`
 	width: 80%;
@@ -16,6 +18,7 @@ const Login = ({ changeLog }) => {
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
 	const history = useHistory();
+	const dispatch = useDispatch();
 
 	const handleEmail = (event) => {
 		setEmail(event.target.value);
@@ -33,7 +36,14 @@ const Login = ({ changeLog }) => {
 			password,
 		};
 
-		await fetchLogin(user, history);
+		const res = await fetchLogin(user, history);
+		if (res) {
+			dispatch(actionCreators.login(res));
+		}
+		await localStorage.setItem('token', res.result);
+		if (localStorage.getItem('token') !== 'undefined') {
+			history.push('/courses');
+		}
 		changeLog(true);
 	};
 
@@ -43,6 +53,7 @@ const Login = ({ changeLog }) => {
 			<div>
 				<div>Email</div>
 				<InputField
+					name='email'
 					type='emai'
 					placeholder='enter email'
 					onChange={handleEmail}
@@ -51,6 +62,7 @@ const Login = ({ changeLog }) => {
 			<div>
 				<div>Password</div>
 				<InputField
+					name='password'
 					type='password'
 					placeholder='enter password'
 					onChange={handlePassword}

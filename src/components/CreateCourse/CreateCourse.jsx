@@ -1,10 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import styled from 'styled-components';
 import { Button } from '../Button/Button';
 import { timeConverter } from '../../utils/functions';
 import InputField from '../Input/Input';
 import { useHistory } from 'react-router';
 import { fetchDataGo, fetchWithToken } from '../../utils/api';
+import { actionCreators } from '../../store/authors/actionCreators';
+import { connect } from 'react-redux';
+import { actionCreators as actionCreatorsAuthors } from '../../store/authors/actionCreators';
+import { useSelector } from 'react-redux';
 
 const CoursesContainer = styled.div`
 	width: 80%;
@@ -47,27 +51,32 @@ const InputAuthor = styled.input`
 	width: 100%;
 `;
 
-const CreateCourse = () => {
+const CreateCourse = ({
+	authorsForm,
+	setAuthors,
+	addAuthorToForm,
+	deleteAuthor,
+	resetForm,
+	enabledAuthors,
+}) => {
 	const [authorInput, setAuthorInput] = useState('');
 	const [duration, setDuration] = useState('');
-	const [courseAuthor, setCourseAuthor] = useState([]);
-	const [authorList, setAuthorList] = useState([]);
 	const [title, setTitle] = useState('');
 	const [descr, setDescr] = useState('');
 	const history = useHistory();
-	const token = localStorage.getItem('token');
+	const token = useSelector((state) => state.authentication.token);
+
+	const fetchAuthors = useCallback(() => {
+		async function fetchData() {
+			const data = await fetchDataGo('authors/all');
+			setAuthors(data);
+		}
+		fetchData();
+	}, [setAuthors]);
 
 	useEffect(() => {
 		fetchAuthors();
-	}, []);
-
-	const fetchAuthors = () => {
-		async function fetchData() {
-			const data = await fetchDataGo('authors/all');
-			setAuthorList(data);
-		}
-		fetchData();
-	};
+	}, [fetchAuthors]);
 
 	const handleTitle = (event) => {
 		setTitle(event.target.value);
@@ -85,7 +94,7 @@ const CreateCourse = () => {
 		title,
 		description: descr,
 		duration,
-		authors: courseAuthor,
+		authors: authorsForm,
 	};
 
 	const addAuthor = async (event) => {
@@ -101,17 +110,11 @@ const CreateCourse = () => {
 
 	const addAuthorToList = (event, author) => {
 		event.preventDefault();
-		setCourseAuthor((courseAuthor) => [...courseAuthor, author]);
-		setAuthorList((authorList) =>
-			authorList.filter((item) => item.id !== author.id)
-		);
+		addAuthorToForm(author);
 	};
 
 	const removeAuthorToList = (author) => {
-		setAuthorList((authorList) => [...authorList, author]);
-		setCourseAuthor((courseAuthor) =>
-			courseAuthor.filter((item) => item.id !== author.id)
-		);
+		deleteAuthor(author);
 	};
 
 	const handleDuration = (event) => {
@@ -135,9 +138,10 @@ const CreateCourse = () => {
 			newCourse = {
 				...newCourse,
 				duration: Number(duration),
-				authors: courseAuthor.map((item) => item.id),
+				authors: authorsForm.map((item) => item.id),
 			};
 			await fetchWithToken('courses/add', newCourse, token);
+			resetForm();
 			history.push('/courses');
 		}
 	};
@@ -183,7 +187,7 @@ const CreateCourse = () => {
 					</StyledLeftColumn>
 					<StyledRightColumn>
 						<div>Authors</div>
-						{authorList.map((author) => {
+						{enabledAuthors.map((author) => {
 							return (
 								<StyledAuthorsList key={author.id}>
 									<div>{author.name}</div>
@@ -210,7 +214,7 @@ const CreateCourse = () => {
 					</StyledLeftColumn>
 					<StyledRightColumn>
 						<div>Course authors</div>
-						{courseAuthor.map((author) => {
+						{authorsForm.map((author) => {
 							return (
 								<StyledAuthorsList key={author.id}>
 									<div>{author.name}</div>
@@ -227,4 +231,21 @@ const CreateCourse = () => {
 	);
 };
 
-export default CreateCourse;
+const mapStateToProps = (state) => {
+	return {
+		authorsForm: state.authors.authorsForm,
+		authors: state.authors.authors,
+		courses: state.courses.courses,
+		enabledAuthors: state.authors.enabledAuthors,
+	};
+};
+
+const mapDispatchToProps = {
+	setCourses: (data) => actionCreators.setCourses(data),
+	setAuthors: (data) => actionCreatorsAuthors.setAuthors(data),
+	addAuthorToForm: (author) => actionCreatorsAuthors.addAuthor(author),
+	deleteAuthor: (id) => actionCreatorsAuthors.deleteAuthor(id),
+	resetForm: () => actionCreatorsAuthors.resetForm(),
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(CreateCourse);

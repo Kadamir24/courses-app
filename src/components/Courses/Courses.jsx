@@ -5,6 +5,9 @@ import { Button } from '../Button/Button';
 import InputField from '../Input/Input';
 import { Link } from 'react-router-dom';
 import { fetchDataGo } from '../../utils/api';
+import { actionCreators } from '../../store/courses/actionCreators';
+import { actionCreators as actionCreatorsAuthors } from '../../store/authors/actionCreators';
+import { useSelector, useDispatch } from 'react-redux';
 
 const CoursesContainer = styled.div`
 	width: 80%;
@@ -37,25 +40,26 @@ const ButtonAdd = styled.button`
 
 const Courses = () => {
 	const [search, setSearch] = useState('');
-	const [courseList, setCourseList] = useState([]);
-	const [authorsList, setAuthorsList] = useState([]);
 	const [curInput, setCurInput] = useState('');
+	const courses = useSelector((state) => state.courses.courses);
+	const authors = useSelector((state) => state.authors.authors);
+	const dispatch = useDispatch();
 
 	useEffect(() => {
 		async function fetchData() {
 			const data = await fetchDataGo('courses/all');
-			setCourseList(data);
+			dispatch(actionCreators.setCourses(data));
 		}
 		fetchData();
-	}, []);
+	}, [dispatch]);
 
 	useEffect(() => {
 		async function fetchData() {
 			const data = await fetchDataGo('authors/all');
-			setAuthorsList(data);
+			dispatch(actionCreatorsAuthors.setAuthors(data));
 		}
 		fetchData();
-	}, []);
+	}, [dispatch]);
 
 	const goSearch = (event) => {
 		event.preventDefault();
@@ -85,7 +89,7 @@ const Courses = () => {
 					</Link>
 				</CoursesTop>
 				<div>
-					{courseList
+					{courses
 						.filter(
 							(item) =>
 								item.title.toLowerCase().includes(search.toLowerCase()) ||
@@ -93,11 +97,7 @@ const Courses = () => {
 						)
 						.map((course) => {
 							return (
-								<CourseCard
-									key={course.id}
-									authorsList={authorsList}
-									{...course}
-								/>
+								<CourseCard key={course.id} authorsList={authors} {...course} />
 							);
 						})}
 				</div>

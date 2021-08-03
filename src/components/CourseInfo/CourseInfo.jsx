@@ -3,7 +3,8 @@ import styled from 'styled-components';
 import { Button } from '../Button/Button';
 import { timeConverter } from '../../utils/functions';
 import { useParams, Link } from 'react-router-dom';
-import { fetchDataGo, fetchDataWithId } from '../../utils/api';
+import { fetchDataWithId } from '../../utils/api';
+import { useSelector } from 'react-redux';
 
 const CardContainer = styled.div`
 	width: 80%;
@@ -24,6 +25,7 @@ const CourseInfo = () => {
 	const [course, setCourse] = useState();
 	const [authorsList, setAuthorsList] = useState([]);
 	const [loading, setLoading] = useState(true);
+	const authors = useSelector((state) => state.authors.authors);
 	useEffect(() => {
 		async function fetchAndSet(id) {
 			const newCourse = await fetchDataWithId(id);
@@ -37,11 +39,11 @@ const CourseInfo = () => {
 
 	useEffect(() => {
 		async function fetchData() {
-			const data = await fetchDataGo('authors/all');
+			const data = authors;
 			setAuthorsList(data);
 		}
 		fetchData();
-	}, []);
+	}, [authors]);
 
 	return (
 		<CardContainer>
