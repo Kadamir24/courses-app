@@ -5,9 +5,9 @@ import { Button } from '../Button/Button';
 import InputField from '../Input/Input';
 import { Link } from 'react-router-dom';
 import { fetchDataGo } from '../../utils/api';
-import { connect } from 'react-redux';
 import { actionCreators } from '../../store/courses/actionCreators';
 import { actionCreators as actionCreatorsAuthors } from '../../store/authors/actionCreators';
+import { useSelector, useDispatch } from 'react-redux';
 
 const CoursesContainer = styled.div`
 	width: 80%;
@@ -38,35 +38,28 @@ const ButtonAdd = styled.button`
 	}
 `;
 
-const Courses = ({ authors, courses, getCourses, getAuthors }) => {
+const Courses = () => {
 	const [search, setSearch] = useState('');
-	const [courseList, setCourseList] = useState([]);
-	const [authorsList, setAuthorsList] = useState([]);
 	const [curInput, setCurInput] = useState('');
+	const courses = useSelector((state) => state.courses.courses);
+	const authors = useSelector((state) => state.authors.authors);
+	const dispatch = useDispatch();
 
 	useEffect(() => {
 		async function fetchData() {
 			const data = await fetchDataGo('courses/all');
-			getCourses(data);
-			setCourseList(data);
-			setCourseList(courses);
+			dispatch(actionCreators.getCourses(data));
 		}
 		fetchData();
-	}, []);
-
-	useEffect(() => {
-		setCourseList(courses);
-	}, []);
+	}, [dispatch]);
 
 	useEffect(() => {
 		async function fetchData() {
 			const data = await fetchDataGo('authors/all');
-			getAuthors(data);
-			setAuthorsList(authors);
+			dispatch(actionCreatorsAuthors.setAuthors(data));
 		}
-
 		fetchData();
-	}, []);
+	}, [dispatch]);
 
 	const goSearch = (event) => {
 		event.preventDefault();
@@ -96,7 +89,7 @@ const Courses = ({ authors, courses, getCourses, getAuthors }) => {
 					</Link>
 				</CoursesTop>
 				<div>
-					{courseList
+					{courses
 						.filter(
 							(item) =>
 								item.title.toLowerCase().includes(search.toLowerCase()) ||
@@ -104,11 +97,7 @@ const Courses = ({ authors, courses, getCourses, getAuthors }) => {
 						)
 						.map((course) => {
 							return (
-								<CourseCard
-									key={course.id}
-									authorsList={authorsList}
-									{...course}
-								/>
+								<CourseCard key={course.id} authorsList={authors} {...course} />
 							);
 						})}
 				</div>
@@ -117,18 +106,4 @@ const Courses = ({ authors, courses, getCourses, getAuthors }) => {
 	);
 };
 
-const mapStateToProps = (state) => {
-	return {
-		authors: state.authors.authors,
-		courses: state.courses.courses,
-	};
-};
-
-const mapDispatchToProps = (dispatch) => {
-	return {
-		getCourses: (data) => dispatch(actionCreators.getCourses(data)),
-		getAuthors: (data) => dispatch(actionCreatorsAuthors.getAuthors(data)),
-	};
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(Courses);
+export default Courses;

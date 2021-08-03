@@ -5,12 +5,6 @@ const courseInitialState = {
 };
 
 const courses = (state = courseInitialState, action) => {
-	console.log('TODELETE', state.courses);
-	console.log('IDIWKA', action.payload);
-	console.log(
-		'CHECKCHECK',
-		state.courses.filter((item) => item.id !== action.payload)
-	);
 	switch (action.type) {
 		case actionTypes.GET_COURSES:
 			return {

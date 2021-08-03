@@ -31,7 +31,6 @@ export const fetchLogin = (user, history) => {
 			alert('Not found');
 		}
 		const res = data.json();
-		console.log('chetam', res);
 		return res;
 	});
 	// .then((json) => localStorage.setItem('token', json.result))

@@ -4,7 +4,7 @@ import { Button } from '../Button/Button';
 import { timeConverter } from '../../utils/functions';
 import { useParams, Link } from 'react-router-dom';
 import { fetchDataWithId } from '../../utils/api';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 
 const CardContainer = styled.div`
 	width: 80%;
@@ -20,11 +20,12 @@ const SubInfo = styled.div`
 	width: 30%;
 `;
 
-const CourseInfo = ({ authors }) => {
+const CourseInfo = () => {
 	const { id } = useParams();
 	const [course, setCourse] = useState();
 	const [authorsList, setAuthorsList] = useState([]);
 	const [loading, setLoading] = useState(true);
+	const authors = useSelector((state) => state.authors.authors);
 	useEffect(() => {
 		async function fetchAndSet(id) {
 			const newCourse = await fetchDataWithId(id);
@@ -77,8 +78,4 @@ const CourseInfo = ({ authors }) => {
 	);
 };
 
-const mapStateToProps = (state) => ({
-	authors: state.authors.authors,
-});
-
-export default connect(mapStateToProps)(CourseInfo);
+export default CourseInfo;

@@ -8,14 +8,14 @@ import './App.css';
 import { Switch, Route } from 'react-router-dom';
 import { BrowserRouter } from 'react-router-dom';
 import React, { useState } from 'react';
-import store from './store/index';
+
 const check = () => {
 	return localStorage.getItem('token') !== null;
 };
 
 function App() {
 	const [isLoggedIn, setIsLoggedIn] = useState(check());
-	console.log('Check store', store.getState());
+
 	return (
 		<BrowserRouter>
 			<Header name={''} isLoggedIn={isLoggedIn} />

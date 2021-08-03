@@ -53,6 +53,7 @@ const Login = ({ changeLog }) => {
 			<div>
 				<div>Email</div>
 				<InputField
+					name='email'
 					type='emai'
 					placeholder='enter email'
 					onChange={handleEmail}
@@ -61,6 +62,7 @@ const Login = ({ changeLog }) => {
 			<div>
 				<div>Password</div>
 				<InputField
+					name='password'
 					type='password'
 					placeholder='enter password'
 					onChange={handlePassword}

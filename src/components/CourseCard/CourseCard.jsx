@@ -6,8 +6,8 @@ import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
 import { actionCreators } from '../../store/courses/actionCreators';
-import store from '../../store/index';
 import { fetchDelete } from '../../utils/api';
+import { useSelector } from 'react-redux';
 
 const CardContainer = styled.div`
 	width: 95%;
@@ -34,13 +34,13 @@ const CourseCard = ({
 	authorsList,
 	id,
 }) => {
-	const token = localStorage.getItem('token');
+	const token = useSelector((state) => state.authentication.token);
 	const dispatch = useDispatch();
 	const deleteCourse = () => {
 		dispatch(actionCreators.deleteCourse(id));
-		console.log('Check store2', store.getState());
 		fetchDelete('courses', id, token);
 	};
+
 	return (
 		<CardContainer>
 			<MainInfo>

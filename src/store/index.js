@@ -13,9 +13,6 @@ const rootReducer = combineReducers({
 });
 
 const store = createStore(rootReducer, persistedState);
-store.subscribe(() => {
-	saveState(store.getState());
-});
 
 store.subscribe(
 	throttle(() => {

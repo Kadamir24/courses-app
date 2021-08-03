@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import styled from 'styled-components';
 import { Button } from '../Button/Button';
 import { timeConverter } from '../../utils/functions';
@@ -8,6 +8,7 @@ import { fetchDataGo, fetchWithToken } from '../../utils/api';
 import { actionCreators } from '../../store/authors/actionCreators';
 import { connect } from 'react-redux';
 import { actionCreators as actionCreatorsAuthors } from '../../store/authors/actionCreators';
+import { useSelector } from 'react-redux';
 
 const CoursesContainer = styled.div`
 	width: 80%;
@@ -52,29 +53,30 @@ const InputAuthor = styled.input`
 
 const CreateCourse = ({
 	authorsForm,
-	getAuthors,
+	setAuthors,
 	addAuthorToForm,
 	deleteAuthor,
+	resetForm,
+	enabledAuthors,
 }) => {
 	const [authorInput, setAuthorInput] = useState('');
 	const [duration, setDuration] = useState('');
-	const [authorList, setAuthorList] = useState([]);
 	const [title, setTitle] = useState('');
 	const [descr, setDescr] = useState('');
 	const history = useHistory();
-	const token = localStorage.getItem('token');
+	const token = useSelector((state) => state.authentication.token);
+
+	const fetchAuthors = useCallback(() => {
+		async function fetchData() {
+			const data = await fetchDataGo('authors/all');
+			setAuthors(data);
+		}
+		fetchData();
+	}, [setAuthors]);
 
 	useEffect(() => {
 		fetchAuthors();
-	}, []);
-	const fetchAuthors = () => {
-		async function fetchData() {
-			const data = await fetchDataGo('authors/all');
-			getAuthors(data);
-			setAuthorList(data);
-		}
-		fetchData();
-	};
+	}, [fetchAuthors]);
 
 	const handleTitle = (event) => {
 		setTitle(event.target.value);
@@ -109,14 +111,10 @@ const CreateCourse = ({
 	const addAuthorToList = (event, author) => {
 		event.preventDefault();
 		addAuthorToForm(author);
-		setAuthorList((authorList) =>
-			authorList.filter((item) => item.id !== author.id)
-		);
 	};
 
 	const removeAuthorToList = (author) => {
 		deleteAuthor(author);
-		setAuthorList((authorList) => [...authorList, author]);
 	};
 
 	const handleDuration = (event) => {
@@ -143,6 +141,7 @@ const CreateCourse = ({
 				authors: authorsForm.map((item) => item.id),
 			};
 			await fetchWithToken('courses/add', newCourse, token);
+			resetForm();
 			history.push('/courses');
 		}
 	};
@@ -188,7 +187,7 @@ const CreateCourse = ({
 					</StyledLeftColumn>
 					<StyledRightColumn>
 						<div>Authors</div>
-						{authorList.map((author) => {
+						{enabledAuthors.map((author) => {
 							return (
 								<StyledAuthorsList key={author.id}>
 									<div>{author.name}</div>
@@ -237,16 +236,18 @@ const mapStateToProps = (state) => {
 		authorsForm: state.authors.authorsForm,
 		authors: state.authors.authors,
 		courses: state.courses.courses,
+		enabledAuthors: state.authors.enabledAuthors,
 	};
 };
 
 const mapDispatchToProps = (dispatch) => {
 	return {
 		getCourses: (data) => dispatch(actionCreators.getCourses(data)),
-		getAuthors: (data) => dispatch(actionCreatorsAuthors.getAuthors(data)),
+		setAuthors: (data) => dispatch(actionCreatorsAuthors.setAuthors(data)),
 		addAuthorToForm: (author) =>
 			dispatch(actionCreatorsAuthors.addAuthor(author)),
 		deleteAuthor: (id) => dispatch(actionCreatorsAuthors.deleteAuthor(id)),
+		resetForm: () => dispatch(actionCreatorsAuthors.resetForm()),
 	};
 };
 
