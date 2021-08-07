@@ -33,12 +33,6 @@ export const fetchLogin = (user, history) => {
 		const res = data.json();
 		return res;
 	});
-	// .then((json) => localStorage.setItem('token', json.result))
-	// .then(() =>
-	// 	localStorage.getItem('token') !== 'undefined'
-	// 		? history.push('/courses')
-	// 		: ''
-	// );
 };
 
 export const fetchDataGo = async (path) => {
@@ -65,6 +59,24 @@ export const fetchDataWithId = async (id) => {
 export const fetchWithToken = (path, item, token) => {
 	const options = {
 		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json',
+			Authorization: `${token}`,
+		},
+		body: JSON.stringify(item),
+	};
+
+	return fetch(`${REACT_APP_BASE_URL}/${path}`, options).then((data) => {
+		if (!data.ok) {
+			alert('Somethin went wrong');
+		}
+		return data.json();
+	});
+};
+
+export const fetchWithTokenPut = (path, item, token) => {
+	const options = {
+		method: 'PUT',
 		headers: {
 			'Content-Type': 'application/json',
 			Authorization: `${token}`,

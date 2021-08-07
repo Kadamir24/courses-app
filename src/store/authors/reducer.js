@@ -36,6 +36,11 @@ const authors = (state = authorsInitialState, action) => {
 				authorsForm: [],
 				enabledAuthors: [],
 			};
+		case actionTypes.RESET_AUTHOR_FORM:
+			return {
+				...state,
+				authorsForm: [],
+			};
 		default:
 			return state;
 	}

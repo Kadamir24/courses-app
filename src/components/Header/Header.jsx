@@ -4,7 +4,8 @@ import logo from '../../logo.svg';
 import { Button } from '../Button/Button';
 import { useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { actionCreators } from '../../store/user/actionCreators';
+import { logOutThunk } from '../../store/user/thunk';
+import { useSelector } from 'react-redux';
 
 const StyledHeader = styled.div`
 	width: 80%;
@@ -29,12 +30,14 @@ const Logo = styled.div`
 const Header = ({ name, isLoggedIn }) => {
 	const history = useHistory();
 	const dispatch = useDispatch();
+	const token = useSelector((state) => state.authentication.token);
 
-	const logOut = () => {
+	const logOut = async () => {
 		localStorage.removeItem('token');
-		dispatch(actionCreators.logout());
+		await dispatch(logOutThunk(token));
 		history.push(`/login`);
 		window.location.reload();
+		localStorage.removeItem('state');
 	};
 
 	const logIn = () => {
