@@ -26,16 +26,16 @@ const courses = (state = courseInitialState, action) => {
 			return {
 				...state,
 				courses: [...state.courses, action.payload],
-				// courses: {
-				// 	courses: [...state.courses, action.payload],
-				// 	currentCourse: {},
-				// },
 			};
-		case actionTypes.DELETE_UPDATED_COPY:
+		case actionTypes.UPDATE_COURSE:
+			const index = state.courses.findIndex(
+				(course) => course.id === action.payload.id
+			);
+			const newArr = [...state.courses];
+			newArr[index] = action.payload;
 			return {
 				...state,
-				currentCourse: {},
-				LOLKEK: 'CHEBUREK',
+				courses: newArr,
 			};
 		default:
 			return state;

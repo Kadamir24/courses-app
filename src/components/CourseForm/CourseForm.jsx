@@ -91,7 +91,6 @@ const CourseForm = ({
 
 	useEffect(() => {
 		if (courseId !== undefined) {
-			console.log('check');
 			setTitle(currentCourse.title);
 			setDescr(currentCourse.description);
 			setDuration(currentCourse.duration);

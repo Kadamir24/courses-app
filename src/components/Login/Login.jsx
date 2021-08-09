@@ -3,7 +3,7 @@ import InputField from '../Input/Input';
 import { Button } from '../Button/Button';
 import { Link, useHistory } from 'react-router-dom';
 import styled from 'styled-components';
-import { getUser, setRoleThunk } from '../../store/user/thunk';
+import { getUser } from '../../store/user/thunk';
 import { useDispatch } from 'react-redux';
 import store from '../../store/index';
 
