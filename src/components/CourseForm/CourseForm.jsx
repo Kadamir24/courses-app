@@ -10,7 +10,11 @@ import { actionCreators as actionCreatorsAuthors } from '../../store/authors/act
 import { useSelector, useDispatch } from 'react-redux';
 import { addAuthorThunk } from '../../store/authors/thunk';
 import { useParams } from 'react-router-dom';
-import { addCourseThunk, updateCourseThunk } from '../../store/courses/thunk';
+import {
+	addCourseThunk,
+	updateCourseThunk,
+	getCourseById,
+} from '../../store/courses/thunk';
 
 const CoursesContainer = styled.div`
 	width: 80%;
@@ -70,8 +74,7 @@ const CourseForm = ({
 	const token = useSelector((state) => state.authentication.token);
 	const dispatch = useDispatch();
 	const { courseId } = useParams();
-	const courseStore = useSelector((state) => state.courses.courses);
-	const [updatedCourse, setUpdatedCourse] = useState('');
+	const currentCourse = useSelector((state) => state.courses.currentCourse);
 
 	useEffect(() => {
 		resetAuthorForm();
@@ -80,41 +83,30 @@ const CourseForm = ({
 	useEffect(() => {
 		async function checkId() {
 			if (courseId !== undefined) {
-				await setUpdatedCourse(
-					courseStore.filter((course) => course.id === courseId)
-				);
+				dispatch(getCourseById(courseId));
 			}
 		}
 		checkId();
-	}, [courseId, courseStore]);
+	}, [courseId, dispatch]);
 
 	useEffect(() => {
-		if (updatedCourse !== undefined && updatedCourse.length === 1) {
-			setTitle(updatedCourse[0].title);
+		if (courseId !== undefined) {
+			console.log('check');
+			setTitle(currentCourse.title);
+			setDescr(currentCourse.description);
+			setDuration(currentCourse.duration);
 		}
-	}, [updatedCourse]);
+	}, [courseId, currentCourse]);
 
 	useEffect(() => {
-		if (updatedCourse !== undefined && updatedCourse.length === 1) {
-			setDescr(updatedCourse[0].description);
-		}
-	}, [updatedCourse]);
-
-	useEffect(() => {
-		if (updatedCourse !== undefined && updatedCourse.length === 1) {
-			setDuration(updatedCourse[0].duration);
-		}
-	}, [updatedCourse]);
-
-	useEffect(() => {
-		if (updatedCourse !== undefined && updatedCourse.length === 1) {
+		if (courseId !== undefined) {
 			enabledAuthors.map((author) => {
-				return updatedCourse[0].authors.includes(author.id)
+				return currentCourse.authors.includes(author.id)
 					? addAuthorToForm(author)
 					: '';
 			});
 		}
-	}, [addAuthorToForm, updatedCourse]);
+	}, [courseId, addAuthorToForm, currentCourse]);
 
 	const handleTitle = (event) => {
 		setTitle(event.target.value);

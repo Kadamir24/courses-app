@@ -7,23 +7,18 @@ import CourseForm from './components/CourseForm/CourseForm';
 import './App.css';
 import { Switch, Route } from 'react-router-dom';
 import { BrowserRouter } from 'react-router-dom';
-import React, { useState } from 'react';
-import store from './store';
+import React from 'react';
 import { PrivateRoute } from './components/PrivateRouter/PrivateRouter';
-
-const check = () => {
-	// return localStorage.getItem('token') !== null;
-	return store.getState().authentication.token !== null;
-};
+import { useSelector } from 'react-redux';
 
 function App() {
-	const [isLoggedIn, setIsLoggedIn] = useState(check());
+	const token = useSelector((state) => state.authentication.token);
 
 	return (
 		<BrowserRouter>
-			<Header name={''} isLoggedIn={isLoggedIn} />
+			<Header name={''} />
 			<Switch>
-				{isLoggedIn ? (
+				{token ? (
 					<Switch>
 						<Route exact path='/courses' component={Courses} />
 						<PrivateRoute exact path='/courses/add' component={CourseForm} />
@@ -36,10 +31,7 @@ function App() {
 					</Switch>
 				) : (
 					<Switch>
-						<Route
-							path='/login'
-							render={() => <Login changeLog={setIsLoggedIn} />}
-						/>
+						<Route path='/login' render={() => <Login />} />
 						<Route path='/registration' component={Registration} />
 					</Switch>
 				)}

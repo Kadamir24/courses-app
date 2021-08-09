@@ -1,10 +1,12 @@
 import { REACT_APP_BASE_URL } from '../../env-config';
 import { actionCreators } from './actionCreators';
 
-export async function thunk_getAuthors(dispatch) {
-	const response = await fetch(`${REACT_APP_BASE_URL}/authors/all`);
-	const res = await response.json();
-	dispatch(actionCreators.setAuthors(res.result));
+export function getAuthorsThunk() {
+	return async function getAuthors(dispatch) {
+		const response = await fetch(`${REACT_APP_BASE_URL}/authors/all`);
+		const res = await response.json();
+		dispatch(actionCreators.setAuthors(res.result));
+	};
 }
 
 export const addAuthorThunk = (item, token) => {
@@ -24,6 +26,6 @@ export const addAuthorThunk = (item, token) => {
 				}
 				return data.json();
 			})
-			.then(() => dispatch(thunk_getAuthors));
+			.then(() => dispatch(getAuthorsThunk()));
 	};
 };

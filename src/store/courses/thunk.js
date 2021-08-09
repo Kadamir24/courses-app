@@ -1,14 +1,17 @@
 import { REACT_APP_BASE_URL } from '../../env-config';
 import { actionCreators } from './actionCreators';
 
-export async function thunk_getCourses(dispatch) {
-	const response = await fetch(`${REACT_APP_BASE_URL}/courses/all`);
-	const res = await response.json();
-	dispatch(actionCreators.setCourses(res.result));
+export function getCoursesThunk() {
+	console.log('LOL KEK CHEBUREK');
+	return async function getCourses(dispatch) {
+		const response = await fetch(`${REACT_APP_BASE_URL}/courses/all`);
+		const res = await response.json();
+		dispatch(actionCreators.setCourses(res.result));
+	};
 }
 
 export function getCourseById(id) {
-	return async function thunk_getCourseById(dispatch) {
+	return async function getCourseByIdThunk(dispatch) {
 		const response = await fetch(`${REACT_APP_BASE_URL}/courses/${id}`);
 		const res = await response.json();
 		dispatch(actionCreators.getCourse(res.result));
@@ -44,6 +47,7 @@ export const addCourseThunk = (item, token) => {
 		},
 		body: JSON.stringify(item),
 	};
+	console.log('DOBAWLAY!!!!');
 	return function (dispatch) {
 		return fetch(`${REACT_APP_BASE_URL}/courses/add`, options)
 			.then((data) => {
@@ -65,14 +69,19 @@ export const updateCourseThunk = (courseId, item, token) => {
 		},
 		body: JSON.stringify(item),
 	};
+	console.log('CHETAM PO KURSU', courseId);
 	return function (dispatch) {
-		return fetch(`${REACT_APP_BASE_URL}/courses/${courseId}`, options)
-			.then((data) => {
-				if (!data.ok) {
-					alert('Somethin went wrong');
-				}
-				return data.json();
-			})
-			.then((data) => dispatch(actionCreators.setNewCourse(data.result)));
+		return (
+			fetch(`${REACT_APP_BASE_URL}/courses/${courseId}`, options)
+				.then((data) => {
+					if (!data.ok) {
+						alert('Something went wrong');
+					}
+					console.log('DATATATATAT', data);
+					return data.json();
+				})
+				// .then((data) => console.log('GO GO GO GO', data))
+				.then((data) => dispatch(actionCreators.setNewCourse(data.result)))
+		);
 	};
 };

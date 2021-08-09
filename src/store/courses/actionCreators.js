@@ -5,4 +5,5 @@ export const actionCreators = {
 	setCourses: (data) => ({ type: actionTypes.SET_COURSES, payload: data }),
 	deleteCourse: (id) => ({ type: actionTypes.DELETE_COURSE, payload: id }),
 	setNewCourse: (data) => ({ type: actionTypes.SET_NEW_COURSE, payload: data }),
+	deleteUpdatedCourse: () => ({ type: actionTypes.DELETE_UPDATED_COURSE }),
 };

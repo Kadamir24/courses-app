@@ -20,6 +20,21 @@ export function getUser(user) {
 	};
 }
 
+export function setRoleThunk(token) {
+	const options = {
+		method: 'GET',
+		headers: {
+			'Content-Type': 'application/json',
+			Authorization: `${token}`,
+		},
+	};
+	return async function setRole(dispatch) {
+		const response = await fetch(`${REACT_APP_BASE_URL}/users/me`, options);
+		const res = await response.json();
+		await dispatch(actionCreators.setUserRole(res.result.role));
+	};
+}
+
 export function logOutThunk(token) {
 	const options = {
 		method: 'DELETE',

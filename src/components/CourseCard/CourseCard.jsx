@@ -34,7 +34,7 @@ const CourseCard = ({
 	id,
 }) => {
 	const token = useSelector((state) => state.authentication.token);
-	const admin = useSelector((state) => state.authentication.email);
+	const admin = useSelector((state) => state.authentication.role);
 	const dispatch = useDispatch();
 	const deleteCourse = async () => {
 		await dispatch(deleteCourseThunk(id, token));
@@ -59,7 +59,7 @@ const CourseCard = ({
 				<Link to={`/courses/${id}`}>
 					<Button>Show course</Button>
 				</Link>
-				{admin === 'admin@email.com' ? (
+				{admin === 'admin' ? (
 					<>
 						<Link to={`/courses/update/${id}`}>
 							<Button>Update</Button>

@@ -49,7 +49,7 @@ const Header = ({ name, isLoggedIn }) => {
 				<img src={logo} alt='logo' />
 			</Logo>
 			<StyledName>
-				{isLoggedIn ? (
+				{token ? (
 					<>
 						<div>{name}</div>
 						<Button onClick={logOut}>Logout</Button>

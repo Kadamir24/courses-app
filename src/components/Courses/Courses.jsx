@@ -5,8 +5,9 @@ import { Button } from '../Button/Button';
 import InputField from '../Input/Input';
 import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { thunk_getCourses } from '../../store/courses/thunk';
-import { thunk_getAuthors } from '../../store/authors/thunk';
+import { getCoursesThunk } from '../../store/courses/thunk';
+import { getAuthorsThunk } from '../../store/authors/thunk';
+import { setRoleThunk } from '../../store/user/thunk';
 
 const CoursesContainer = styled.div`
 	width: 80%;
@@ -42,16 +43,15 @@ const Courses = () => {
 	const [curInput, setCurInput] = useState('');
 	const courses = useSelector((state) => state.courses.courses);
 	const authors = useSelector((state) => state.authors.authors);
-	const admin = useSelector((state) => state.authentication.email);
+	const admin = useSelector((state) => state.authentication.role);
+	const token = useSelector((state) => state.authentication.token);
 	const dispatch = useDispatch();
 
 	useEffect(() => {
-		dispatch(thunk_getCourses);
-	}, [dispatch]);
-
-	useEffect(() => {
-		dispatch(thunk_getAuthors);
-	}, [dispatch]);
+		dispatch(getCoursesThunk());
+		dispatch(getAuthorsThunk());
+		dispatch(setRoleThunk(token));
+	}, [dispatch, token]);
 
 	const goSearch = (event) => {
 		event.preventDefault();
@@ -76,7 +76,7 @@ const Courses = () => {
 							<Button type='submit'>Search</Button>
 						</form>
 					</StyledSearch>
-					{admin === 'admin@email.com' ? (
+					{admin === 'admin' ? (
 						<Link to={`/courses/add`}>
 							<ButtonAdd>Add course</ButtonAdd>
 						</Link>

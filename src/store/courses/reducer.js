@@ -26,6 +26,16 @@ const courses = (state = courseInitialState, action) => {
 			return {
 				...state,
 				courses: [...state.courses, action.payload],
+				// courses: {
+				// 	courses: [...state.courses, action.payload],
+				// 	currentCourse: {},
+				// },
+			};
+		case actionTypes.DELETE_UPDATED_COPY:
+			return {
+				...state,
+				currentCourse: {},
+				LOLKEK: 'CHEBUREK',
 			};
 		default:
 			return state;
