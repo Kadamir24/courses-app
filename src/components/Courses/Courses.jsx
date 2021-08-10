@@ -44,14 +44,13 @@ const Courses = () => {
 	const courses = useSelector((state) => state.courses.courses);
 	const authors = useSelector((state) => state.authors.authors);
 	const admin = useSelector((state) => state.authentication.role);
-	const token = useSelector((state) => state.authentication.token);
 	const dispatch = useDispatch();
 
 	useEffect(() => {
 		dispatch(getCoursesThunk());
 		dispatch(getAuthorsThunk());
-		dispatch(setRoleThunk(token));
-	}, [dispatch, token]);
+		dispatch(setRoleThunk());
+	}, [dispatch]);
 
 	const goSearch = (event) => {
 		event.preventDefault();

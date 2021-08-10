@@ -98,7 +98,7 @@ const CourseForm = ({
 	}, [courseId, currentCourse]);
 
 	useEffect(() => {
-		if (courseId !== undefined) {
+		if (courseId !== undefined && typeof currentCourse !== 'string') {
 			enabledAuthors.map((author) => {
 				return currentCourse.authors.includes(author.id)
 					? addAuthorToForm(author)

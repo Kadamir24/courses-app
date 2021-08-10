@@ -28,14 +28,11 @@ const courses = (state = courseInitialState, action) => {
 				courses: [...state.courses, action.payload],
 			};
 		case actionTypes.UPDATE_COURSE:
-			const index = state.courses.findIndex(
-				(course) => course.id === action.payload.id
-			);
-			const newArr = [...state.courses];
-			newArr[index] = action.payload;
 			return {
 				...state,
-				courses: newArr,
+				courses: state.courses.map((course) =>
+					course.id === action.payload.id ? action.payload : course
+				),
 			};
 		default:
 			return state;

@@ -11,9 +11,13 @@ export function getCoursesThunk() {
 
 export function getCourseById(id) {
 	return async function getCourseByIdThunk(dispatch) {
-		const response = await fetch(`${REACT_APP_BASE_URL}/courses/${id}`);
-		const res = await response.json();
-		dispatch(actionCreators.getCourse(res.result));
+		try {
+			const response = await fetch(`${REACT_APP_BASE_URL}/courses/${id}`);
+			const res = await response.json();
+			dispatch(actionCreators.getCourse(res.result));
+		} catch (err) {
+			alert('Invalid id', err);
+		}
 	};
 }
 

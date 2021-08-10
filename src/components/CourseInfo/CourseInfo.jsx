@@ -29,6 +29,14 @@ const CourseInfo = () => {
 		dispatch(getCourseById(id));
 	}, [id, dispatch]);
 
+	if (typeof course === 'string') {
+		return (
+			<CardContainer>
+				<div>Invalid id</div>
+			</CardContainer>
+		);
+	}
+
 	return (
 		<CardContainer>
 			{course &&

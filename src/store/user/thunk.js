@@ -20,15 +20,16 @@ export function getUser(user) {
 	};
 }
 
-export function setRoleThunk(token) {
-	const options = {
-		method: 'GET',
-		headers: {
-			'Content-Type': 'application/json',
-			Authorization: `${token}`,
-		},
-	};
-	return async function setRole(dispatch) {
+export function setRoleThunk() {
+	return async function setRole(dispatch, getState) {
+		const token = getState().authentication.token;
+		const options = {
+			method: 'GET',
+			headers: {
+				'Content-Type': 'application/json',
+				Authorization: `${token}`,
+			},
+		};
 		const response = await fetch(`${REACT_APP_BASE_URL}/users/me`, options);
 		const res = await response.json();
 		await dispatch(actionCreators.setUserRole(res.result.role));
