@@ -4,10 +4,10 @@ import CourseCard from '../CourseCard/CourseCard';
 import { Button } from '../Button/Button';
 import InputField from '../Input/Input';
 import { Link } from 'react-router-dom';
-import { fetchDataGo } from '../../utils/api';
-import { actionCreators } from '../../store/courses/actionCreators';
-import { actionCreators as actionCreatorsAuthors } from '../../store/authors/actionCreators';
 import { useSelector, useDispatch } from 'react-redux';
+import { getCoursesThunk } from '../../store/courses/thunk';
+import { getAuthorsThunk } from '../../store/authors/thunk';
+import { setRoleThunk } from '../../store/user/thunk';
 
 const CoursesContainer = styled.div`
 	width: 80%;
@@ -43,22 +43,13 @@ const Courses = () => {
 	const [curInput, setCurInput] = useState('');
 	const courses = useSelector((state) => state.courses.courses);
 	const authors = useSelector((state) => state.authors.authors);
+	const admin = useSelector((state) => state.authentication.role);
 	const dispatch = useDispatch();
 
 	useEffect(() => {
-		async function fetchData() {
-			const data = await fetchDataGo('courses/all');
-			dispatch(actionCreators.setCourses(data));
-		}
-		fetchData();
-	}, [dispatch]);
-
-	useEffect(() => {
-		async function fetchData() {
-			const data = await fetchDataGo('authors/all');
-			dispatch(actionCreatorsAuthors.setAuthors(data));
-		}
-		fetchData();
+		dispatch(getCoursesThunk());
+		dispatch(getAuthorsThunk());
+		dispatch(setRoleThunk());
 	}, [dispatch]);
 
 	const goSearch = (event) => {
@@ -84,9 +75,13 @@ const Courses = () => {
 							<Button type='submit'>Search</Button>
 						</form>
 					</StyledSearch>
-					<Link to={`/courses/add`}>
-						<ButtonAdd>Add course</ButtonAdd>
-					</Link>
+					{admin === 'admin' ? (
+						<Link to={`/courses/add`}>
+							<ButtonAdd>Add course</ButtonAdd>
+						</Link>
+					) : (
+						''
+					)}
 				</CoursesTop>
 				<div>
 					{courses

@@ -5,9 +5,8 @@ import { timeConverter } from '../../utils/functions';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
-import { actionCreators } from '../../store/courses/actionCreators';
-import { fetchDelete } from '../../utils/api';
 import { useSelector } from 'react-redux';
+import { deleteCourseThunk } from '../../store/courses/thunk';
 
 const CardContainer = styled.div`
 	width: 95%;
@@ -35,10 +34,10 @@ const CourseCard = ({
 	id,
 }) => {
 	const token = useSelector((state) => state.authentication.token);
+	const admin = useSelector((state) => state.authentication.role);
 	const dispatch = useDispatch();
-	const deleteCourse = () => {
-		dispatch(actionCreators.deleteCourse(id));
-		fetchDelete('courses', id, token);
+	const deleteCourse = async () => {
+		await dispatch(deleteCourseThunk(id, token));
 	};
 
 	return (
@@ -60,8 +59,16 @@ const CourseCard = ({
 				<Link to={`/courses/${id}`}>
 					<Button>Show course</Button>
 				</Link>
-				<Button>Update</Button>
-				<Button onClick={deleteCourse}>Delete course</Button>
+				{admin === 'admin' ? (
+					<>
+						<Link to={`/courses/update/${id}`}>
+							<Button>Update</Button>
+						</Link>
+						<Button onClick={deleteCourse}>Delete course</Button>
+					</>
+				) : (
+					''
+				)}
 			</SubInfo>
 		</CardContainer>
 	);

@@ -5,6 +5,7 @@ const userInitialState = {
 	name: '',
 	email: '',
 	token: '' || localStorage.getItem('token'),
+	role: '',
 };
 
 const authentication = (state = userInitialState, action) => {
@@ -29,6 +30,11 @@ const authentication = (state = userInitialState, action) => {
 				name: '',
 				email: '',
 				token: '',
+			};
+		case actionTypes.SET_USER_ROLE:
+			return {
+				...state,
+				role: action.payload,
 			};
 		default:
 			return state;

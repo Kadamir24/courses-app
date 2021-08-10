@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import InputField from '../Input/Input';
 import { Button } from '../Button/Button';
 import { Link, useHistory } from 'react-router-dom';
-import { fetchLogin } from '../../utils/api';
 import styled from 'styled-components';
+import { getUser } from '../../store/user/thunk';
 import { useDispatch } from 'react-redux';
-import { actionCreators } from '../../store/user/actionCreators';
+import store from '../../store/index';
 
 const FormStyled = styled.form`
 	width: 80%;
@@ -14,11 +14,12 @@ const FormStyled = styled.form`
 	text-align: center;
 `;
 
-const Login = ({ changeLog }) => {
+const Login = () => {
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
 	const history = useHistory();
 	const dispatch = useDispatch();
+	// const token = useSelector((state) => state.authentication.token);
 
 	const handleEmail = (event) => {
 		setEmail(event.target.value);
@@ -36,15 +37,10 @@ const Login = ({ changeLog }) => {
 			password,
 		};
 
-		const res = await fetchLogin(user, history);
-		if (res) {
-			dispatch(actionCreators.login(res));
-		}
-		await localStorage.setItem('token', res.result);
-		if (localStorage.getItem('token') !== 'undefined') {
+		await dispatch(getUser(user));
+		if (store.getState().authentication.token) {
 			history.push('/courses');
 		}
-		changeLog(true);
 	};
 
 	return (

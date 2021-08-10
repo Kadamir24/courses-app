@@ -3,35 +3,35 @@ import Courses from './components/Courses/Courses';
 import Login from './components/Login/Login';
 import Registration from './components/Registration/Registration';
 import CourseInfo from './components/CourseInfo/CourseInfo';
-import CreateCourse from './components/CreateCourse/CreateCourse';
+import CourseForm from './components/CourseForm/CourseForm';
 import './App.css';
 import { Switch, Route } from 'react-router-dom';
 import { BrowserRouter } from 'react-router-dom';
-import React, { useState } from 'react';
-
-const check = () => {
-	return localStorage.getItem('token') !== null;
-};
+import React from 'react';
+import { PrivateRoute } from './components/PrivateRouter/PrivateRouter';
+import { useSelector } from 'react-redux';
 
 function App() {
-	const [isLoggedIn, setIsLoggedIn] = useState(check());
+	const token = useSelector((state) => state.authentication.token);
 
 	return (
 		<BrowserRouter>
-			<Header name={''} isLoggedIn={isLoggedIn} />
+			<Header name={''} />
 			<Switch>
-				{isLoggedIn ? (
+				{token ? (
 					<Switch>
 						<Route exact path='/courses' component={Courses} />
-						<Route exact path='/courses/add' component={CreateCourse} />
+						<PrivateRoute exact path='/courses/add' component={CourseForm} />
+						<PrivateRoute
+							exact
+							path='/courses/update/:courseId'
+							component={CourseForm}
+						/>
 						<Route exact path='/courses/:id' component={CourseInfo} />
 					</Switch>
 				) : (
 					<Switch>
-						<Route
-							path='/login'
-							render={() => <Login changeLog={setIsLoggedIn} />}
-						/>
+						<Route path='/login' render={() => <Login />} />
 						<Route path='/registration' component={Registration} />
 					</Switch>
 				)}

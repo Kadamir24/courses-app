@@ -1,14 +1,20 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { Button } from '../Button/Button';
 import { timeConverter } from '../../utils/functions';
 import InputField from '../Input/Input';
 import { useHistory } from 'react-router';
-import { fetchDataGo, fetchWithToken } from '../../utils/api';
 import { actionCreators } from '../../store/authors/actionCreators';
 import { connect } from 'react-redux';
 import { actionCreators as actionCreatorsAuthors } from '../../store/authors/actionCreators';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { addAuthorThunk } from '../../store/authors/thunk';
+import { useParams } from 'react-router-dom';
+import {
+	addCourseThunk,
+	updateCourseThunk,
+	getCourseById,
+} from '../../store/courses/thunk';
 
 const CoursesContainer = styled.div`
 	width: 80%;
@@ -51,13 +57,14 @@ const InputAuthor = styled.input`
 	width: 100%;
 `;
 
-const CreateCourse = ({
+const CourseForm = ({
 	authorsForm,
 	setAuthors,
 	addAuthorToForm,
 	deleteAuthor,
 	resetForm,
 	enabledAuthors,
+	resetAuthorForm,
 }) => {
 	const [authorInput, setAuthorInput] = useState('');
 	const [duration, setDuration] = useState('');
@@ -65,18 +72,40 @@ const CreateCourse = ({
 	const [descr, setDescr] = useState('');
 	const history = useHistory();
 	const token = useSelector((state) => state.authentication.token);
-
-	const fetchAuthors = useCallback(() => {
-		async function fetchData() {
-			const data = await fetchDataGo('authors/all');
-			setAuthors(data);
-		}
-		fetchData();
-	}, [setAuthors]);
+	const dispatch = useDispatch();
+	const { courseId } = useParams();
+	const currentCourse = useSelector((state) => state.courses.currentCourse);
 
 	useEffect(() => {
-		fetchAuthors();
-	}, [fetchAuthors]);
+		resetAuthorForm();
+	}, [resetAuthorForm]);
+
+	useEffect(() => {
+		async function checkId() {
+			if (courseId !== undefined) {
+				dispatch(getCourseById(courseId));
+			}
+		}
+		checkId();
+	}, [courseId, dispatch]);
+
+	useEffect(() => {
+		if (courseId !== undefined) {
+			setTitle(currentCourse.title);
+			setDescr(currentCourse.description);
+			setDuration(currentCourse.duration);
+		}
+	}, [courseId, currentCourse]);
+
+	useEffect(() => {
+		if (courseId !== undefined && typeof currentCourse !== 'string') {
+			enabledAuthors.map((author) => {
+				return currentCourse.authors.includes(author.id)
+					? addAuthorToForm(author)
+					: '';
+			});
+		}
+	}, [courseId, addAuthorToForm, currentCourse]);
 
 	const handleTitle = (event) => {
 		setTitle(event.target.value);
@@ -103,8 +132,7 @@ const CreateCourse = ({
 		const newAuthor = {
 			name: authorInput,
 		};
-		await fetchWithToken('authors/add', newAuthor, token);
-		await fetchAuthors();
+		await dispatch(addAuthorThunk(newAuthor, token));
 		setAuthorInput('');
 	};
 
@@ -121,6 +149,7 @@ const CreateCourse = ({
 		if (event.target.value < 0) {
 			event.target.value = 0;
 		}
+		setDuration('');
 		setDuration(event.target.value);
 	};
 
@@ -140,7 +169,29 @@ const CreateCourse = ({
 				duration: Number(duration),
 				authors: authorsForm.map((item) => item.id),
 			};
-			await fetchWithToken('courses/add', newCourse, token);
+			await dispatch(addCourseThunk(newCourse, token));
+			resetForm();
+			history.push('/courses');
+		}
+	};
+
+	const updateCourse = async (event) => {
+		event.preventDefault();
+
+		if (
+			newCourse.title === '' ||
+			newCourse.description.length < 2 ||
+			newCourse.duration === '' ||
+			newCourse.authors.length < 1
+		) {
+			alert('Please, fill in all fields');
+		} else {
+			newCourse = {
+				...newCourse,
+				duration: Number(duration),
+				authors: authorsForm.map((item) => item.id),
+			};
+			await dispatch(updateCourseThunk(courseId, newCourse, token));
 			resetForm();
 			history.push('/courses');
 		}
@@ -156,10 +207,15 @@ const CreateCourse = ({
 							type='text'
 							name='title'
 							placeholder='Enter title'
+							value={title}
 							onChange={handleTitle}
 						/>
 					</div>
-					<Button onClick={(e) => submitCourse(e)}>create course</Button>
+					{courseId ? (
+						<Button onClick={(e) => updateCourse(e)}>update course</Button>
+					) : (
+						<Button onClick={(e) => submitCourse(e)}>create course</Button>
+					)}
 				</StyledTop>
 				<div>
 					<div>Description</div>
@@ -167,6 +223,7 @@ const CreateCourse = ({
 						type='text'
 						name='description'
 						placeholder='Enter description'
+						value={descr}
 						onChange={handleDescr}
 					/>
 				</div>
@@ -206,6 +263,7 @@ const CreateCourse = ({
 							<InputField
 								type='number'
 								name='duration'
+								value={duration}
 								placeholder='enter duration'
 								onChange={handleDuration}
 							/>
@@ -246,6 +304,7 @@ const mapDispatchToProps = {
 	addAuthorToForm: (author) => actionCreatorsAuthors.addAuthor(author),
 	deleteAuthor: (id) => actionCreatorsAuthors.deleteAuthor(id),
 	resetForm: () => actionCreatorsAuthors.resetForm(),
+	resetAuthorForm: () => actionCreatorsAuthors.resetAuthorForm(),
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(CreateCourse);
+export default connect(mapStateToProps, mapDispatchToProps)(CourseForm);

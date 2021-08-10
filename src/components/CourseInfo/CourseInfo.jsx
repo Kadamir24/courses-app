@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { Button } from '../Button/Button';
 import { timeConverter } from '../../utils/functions';
 import { useParams, Link } from 'react-router-dom';
-import { fetchDataWithId } from '../../utils/api';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { getCourseById } from '../../store/courses/thunk';
 
 const CardContainer = styled.div`
 	width: 80%;
@@ -22,33 +22,27 @@ const SubInfo = styled.div`
 
 const CourseInfo = () => {
 	const { id } = useParams();
-	const [course, setCourse] = useState();
-	const [authorsList, setAuthorsList] = useState([]);
-	const [loading, setLoading] = useState(true);
 	const authors = useSelector((state) => state.authors.authors);
+	const course = useSelector((state) => state.courses.currentCourse);
+	const dispatch = useDispatch();
 	useEffect(() => {
-		async function fetchAndSet(id) {
-			const newCourse = await fetchDataWithId(id);
-			setCourse(newCourse);
-			if (newCourse !== undefined) {
-				setLoading(false);
-			}
-		}
-		fetchAndSet(id);
-	}, [id]);
+		dispatch(getCourseById(id));
+	}, [id, dispatch]);
 
-	useEffect(() => {
-		async function fetchData() {
-			const data = authors;
-			setAuthorsList(data);
-		}
-		fetchData();
-	}, [authors]);
+	if (typeof course === 'string') {
+		return (
+			<CardContainer>
+				<div>Invalid id</div>
+			</CardContainer>
+		);
+	}
 
 	return (
 		<CardContainer>
-			{loading ? (
-				<div>Loading...</div>
+			{course &&
+			Object.keys(course).length === 0 &&
+			course.constructor === Object ? (
+				'LOADING'
 			) : (
 				<>
 					<MainInfo>
@@ -58,7 +52,7 @@ const CourseInfo = () => {
 						<div>{course.description}</div>
 						<div>
 							Authors:{' '}
-							{authorsList.map((author) => {
+							{authors.map((author) => {
 								let res = course.authors.includes(author.id)
 									? author.name + ', '
 									: '';
