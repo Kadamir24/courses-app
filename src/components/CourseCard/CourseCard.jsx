@@ -43,19 +43,21 @@ const CourseCard = ({
 	return (
 		<CardContainer>
 			<MainInfo>
-				<h2>{title}</h2>
-				<div>{description}</div>
+				<h2 data-testid='title'>{title}</h2>
+				<div data-testid='description'>{description}</div>
 			</MainInfo>
 			<SubInfo>
-				<div>
+				<div data-testid='authors'>
 					Authors:{' '}
 					{authorsList.map((author) => {
 						let res = authors.includes(author.id) ? author.name + ', ' : '';
 						return res;
 					})}
 				</div>
-				<div>Duration: {timeConverter(duration)} hours</div>
-				<div>Created: {creationDate} hours</div>
+				<div data-testid='duration'>
+					Duration: {timeConverter(duration)} hours
+				</div>
+				<div data-testid='date-creation'>Created: {creationDate} hours</div>
 				<Link to={`/courses/${id}`}>
 					<Button>Show course</Button>
 				</Link>
