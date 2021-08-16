@@ -51,11 +51,15 @@ const Header = ({ name, isLoggedIn }) => {
 			<StyledName>
 				{token ? (
 					<>
-						<div>{name}</div>
-						<Button onClick={logOut}>Logout</Button>
+						<div data-testid='username'>{name}</div>
+						<Button onClick={logOut} data-testid='logout'>
+							Logout
+						</Button>
 					</>
 				) : (
-					<Button onClick={logIn}>Login</Button>
+					<Button onClick={logIn} data-testid='login'>
+						Login
+					</Button>
 				)}
 			</StyledName>
 		</StyledHeader>

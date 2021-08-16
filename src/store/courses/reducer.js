@@ -26,6 +26,7 @@ const courses = (state = courseInitialState, action) => {
 			return {
 				...state,
 				courses: [...state.courses, action.payload],
+				// courses: [...state, action.payload],
 			};
 		case actionTypes.UPDATE_COURSE:
 			return {

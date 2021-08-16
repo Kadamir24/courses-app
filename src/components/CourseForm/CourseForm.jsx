@@ -238,16 +238,19 @@ const CourseForm = ({
 								placeholder='Enter author name'
 								value={authorInput}
 								onChange={handleAuthorInput}
+								aria-label='cost-input'
 							/>
 						</div>
-						<Button onClick={addAuthor}>create author</Button>
+						<Button onClick={addAuthor} data-testid='create-author'>
+							create author
+						</Button>
 					</StyledLeftColumn>
 					<StyledRightColumn>
 						<div>Authors</div>
 						{enabledAuthors.map((author) => {
 							return (
 								<StyledAuthorsList key={author.id}>
-									<div>{author.name}</div>
+									<div className='author-name'>{author.name}</div>
 									<Button onClick={(e) => addAuthorToList(e, author)}>
 										add Author
 									</Button>

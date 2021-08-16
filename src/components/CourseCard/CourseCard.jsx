@@ -41,7 +41,7 @@ const CourseCard = ({
 	};
 
 	return (
-		<CardContainer>
+		<CardContainer className='course-card'>
 			<MainInfo>
 				<h2 data-testid='title'>{title}</h2>
 				<div data-testid='description'>{description}</div>

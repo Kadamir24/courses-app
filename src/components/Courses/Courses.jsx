@@ -77,7 +77,9 @@ const Courses = () => {
 					</StyledSearch>
 					{admin === 'admin' ? (
 						<Link to={`/courses/add`}>
-							<ButtonAdd>Add course</ButtonAdd>
+							<ButtonAdd className='add-course' data-testid='add-course'>
+								Add course
+							</ButtonAdd>
 						</Link>
 					) : (
 						''
