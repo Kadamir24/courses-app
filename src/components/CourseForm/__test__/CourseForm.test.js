@@ -159,9 +159,6 @@ test('It should keep a $ in front of the input', () => {
 
 	const button = document.querySelector('[data-testid=create-author]');
 	expect(button).toHaveTextContent('create author');
-	act(() => {
-		button.dispatchEvent(new MouseEvent('click', { bubbles: true }));
-	});
 	fireEvent.click(button);
 	expect(handleClick).toHaveBeenCalledTimes(0);
 });

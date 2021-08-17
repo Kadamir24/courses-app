@@ -1,3 +1,52 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`CourseCard testing renders without crashing 1`] = `Object {}`;
+exports[`CourseCard testing renders without crashing 1`] = `
+<DocumentFragment>
+  <div
+    class="sc-gtsrHT euWWUH course-card"
+  >
+    <div
+      class="sc-dlnjwi fRFoqb"
+    >
+      <h2
+        data-testid="title"
+      >
+        JavaScript
+      </h2>
+      <div
+        data-testid="description"
+      >
+        Lorem
+      </div>
+    </div>
+    <div
+      class="sc-hKFxyN jRahdW"
+    >
+      <div
+        data-testid="authors"
+      >
+        Authors: author, author2, 
+      </div>
+      <div
+        data-testid="duration"
+      >
+        Duration: 08:20 hours
+      </div>
+      <div
+        data-testid="date-creation"
+      >
+        Created: 01/01/01 hours
+      </div>
+      <a
+        href="/courses/123124"
+      >
+        <button
+          class="sc-bdnxRM CXauk"
+        >
+          Show course
+        </button>
+      </a>
+    </div>
+  </div>
+</DocumentFragment>
+`;

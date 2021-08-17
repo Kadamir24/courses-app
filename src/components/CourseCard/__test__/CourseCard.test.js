@@ -64,7 +64,7 @@ describe('CourseCard testing', () => {
 				</MemoryRouter>
 			</Provider>
 		);
-		const firstRender = asFragment();
+
 		expect(getByTestId('title')).toHaveTextContent('JavaScript');
 		expect(getByTestId('description')).toHaveTextContent('Lorem');
 		expect(getByTestId('duration')).toHaveTextContent('Duration: 08:20 hours');
@@ -74,6 +74,6 @@ describe('CourseCard testing', () => {
 		expect(getByTestId('date-creation')).toHaveTextContent(
 			'Created: 01/01/01 hours'
 		);
-		expect(firstRender).toMatchSnapshot(asFragment());
+		expect(asFragment()).toMatchSnapshot();
 	});
 });
