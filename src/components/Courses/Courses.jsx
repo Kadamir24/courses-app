@@ -27,7 +27,7 @@ const StyledSearch = styled.div`
 	height: 30%;
 `;
 
-const ButtonAdd = styled.button`
+export const ButtonAdd = styled.button`
 	background-color: white;
 	color: black;
 	border: 2px solid #4caf50;
