@@ -133,10 +133,11 @@ const setup = () => {
 		},
 	};
 	const store = mockStore(initialState);
+	const handleClick = jest.fn();
 	const utils = render(
 		<Provider store={store}>
 			<MemoryRouter>
-				<CourseForm />
+				<CourseForm onClick={handleClick} />
 			</MemoryRouter>
 		</Provider>
 	);
@@ -145,13 +146,13 @@ const setup = () => {
 	return {
 		input,
 		authors,
+		handleClick,
 		...utils,
 	};
 };
 
 test('It should keep a $ in front of the input', () => {
-	const handleClick = jest.fn();
-	const { input, authors } = setup();
+	const { input, authors, handleClick } = setup();
 	expect(authors.length).toBe(6);
 	fireEvent.change(input, { target: { value: '23' } });
 	expect(input.value).toBe('23');
@@ -160,5 +161,5 @@ test('It should keep a $ in front of the input', () => {
 	const button = document.querySelector('[data-testid=create-author]');
 	expect(button).toHaveTextContent('create author');
 	fireEvent.click(button);
-	expect(handleClick).toHaveBeenCalledTimes(0);
+	expect(handleClick).toHaveBeenCalledTimes(1);
 });

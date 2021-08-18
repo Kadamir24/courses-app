@@ -38,7 +38,7 @@ export const ButtonAdd = styled.button`
 	}
 `;
 
-const Courses = () => {
+const Courses = ({ onClick }) => {
 	const [search, setSearch] = useState('');
 	const [curInput, setCurInput] = useState('');
 	const courses = useSelector((state) => state.courses.courses);
@@ -77,7 +77,11 @@ const Courses = () => {
 					</StyledSearch>
 					{admin === 'admin' ? (
 						<Link to={`/courses/add`}>
-							<ButtonAdd className='add-course' data-testid='add-course'>
+							<ButtonAdd
+								className='add-course'
+								data-testid='add-course'
+								onClick={onClick}
+							>
 								Add course
 							</ButtonAdd>
 						</Link>

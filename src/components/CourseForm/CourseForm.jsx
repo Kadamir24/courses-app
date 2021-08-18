@@ -65,6 +65,7 @@ const CourseForm = ({
 	resetForm,
 	enabledAuthors,
 	resetAuthorForm,
+	onClick,
 }) => {
 	const [authorInput, setAuthorInput] = useState('');
 	const [duration, setDuration] = useState('');
@@ -241,7 +242,7 @@ const CourseForm = ({
 								aria-label='cost-input'
 							/>
 						</div>
-						<Button onClick={addAuthor} data-testid='create-author'>
+						<Button onClick={(addAuthor, onClick)} data-testid='create-author'>
 							create author
 						</Button>
 					</StyledLeftColumn>

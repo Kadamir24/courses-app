@@ -5,7 +5,7 @@ import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router-dom';
 import configureStore from 'redux-mock-store';
 
-import { render, fireEvent } from '@testing-library/react';
+import { render, fireEvent, screen } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import thunk from 'redux-thunk';
 const middlewares = [thunk];
@@ -90,14 +90,13 @@ it('renders with courses', () => {
 	const { container, queryByTestId } = render(
 		<Provider store={store}>
 			<MemoryRouter>
-				<Courses />
+				<Courses onClick={handleClick} />
 			</MemoryRouter>
 		</Provider>
 	);
 	expect(container.getElementsByClassName('course-card').length).toBe(3);
 	expect(queryByTestId('add-course')).toHaveTextContent('Add course');
 
-	fireEvent.click(queryByTestId('add-course'));
-
-	expect(handleClick).toHaveBeenCalledTimes(0);
+	fireEvent.click(screen.queryByTestId('add-course'));
+	expect(handleClick).toHaveBeenCalledTimes(1);
 });
