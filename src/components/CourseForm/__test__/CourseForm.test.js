@@ -6,6 +6,7 @@ import configureStore from 'redux-mock-store';
 
 import { render, fireEvent } from '@testing-library/react';
 import { act } from 'react-dom/test-utils';
+
 const middlewares = [];
 const mockStore = configureStore(middlewares);
 
@@ -127,9 +128,10 @@ const setup = () => {
 				{ name: 'author3', id: '072fe3fc-e751-4745-9af5-aa9eed0ea9ed' },
 				{ name: 'author4', id: '40b21bd5-cbae-4f33-b154-0252b1ae03a9' },
 				{ name: 'author5', id: '5e0b0f18-32c9-4933-b142-50459b47f09e' },
+			],
+			authorsForm: [
 				{ name: 'author6', id: '9987de6a-b475-484a-b885-622b8fb88bda' },
 			],
-			authorsForm: [],
 		},
 	};
 	const store = mockStore(initialState);
@@ -143,7 +145,18 @@ const setup = () => {
 	);
 	const input = utils.getByLabelText('cost-input');
 	const authors = utils.container.getElementsByClassName('author-name');
+	const buttonCreateAuthor = document.querySelector(
+		'[data-testid=create-author]'
+	);
+	const buttonAddAuthor = document.querySelector('[data-testid=add-author]');
+	const buttonDeleteAuthor = document.querySelector(
+		'[data-testid=delete-author]'
+	);
 	return {
+		buttonCreateAuthor,
+		buttonAddAuthor,
+		buttonDeleteAuthor,
+		store,
 		input,
 		authors,
 		handleClick,
@@ -151,15 +164,29 @@ const setup = () => {
 	};
 };
 
-test('It should keep a $ in front of the input', () => {
-	const { input, authors, handleClick } = setup();
-	expect(authors.length).toBe(6);
-	fireEvent.change(input, { target: { value: '23' } });
-	expect(input.value).toBe('23');
-	expect(authors.length).toBe(6);
+test('It should keep a $ in front of the input', async () => {
+	const {
+		input,
+		authors,
+		handleClick,
+		store,
+		buttonCreateAuthor,
+		buttonAddAuthor,
+		buttonDeleteAuthor,
+	} = setup();
+	expect(authors.length).toBe(5);
+	fireEvent.change(input, { target: { value: 'New Author' } });
+	expect(input.value).toBe('New Author');
 
-	const button = document.querySelector('[data-testid=create-author]');
-	expect(button).toHaveTextContent('create author');
-	fireEvent.click(button);
+	expect(buttonCreateAuthor).toHaveTextContent('create author');
+	fireEvent.click(buttonCreateAuthor);
 	expect(handleClick).toHaveBeenCalledTimes(1);
+
+	expect(buttonAddAuthor).toHaveTextContent('add Author');
+	fireEvent.click(buttonAddAuthor);
+	expect(handleClick).toHaveBeenCalledTimes(2);
+
+	expect(buttonDeleteAuthor).toHaveTextContent('delete Author');
+	fireEvent.click(buttonDeleteAuthor);
+	expect(handleClick).toHaveBeenCalledTimes(3);
 });

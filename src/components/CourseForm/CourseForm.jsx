@@ -252,7 +252,10 @@ const CourseForm = ({
 							return (
 								<StyledAuthorsList key={author.id}>
 									<div className='author-name'>{author.name}</div>
-									<Button onClick={(e) => addAuthorToList(e, author)}>
+									<Button
+										onClick={((e) => addAuthorToList(e, author), onClick)}
+										data-testid='add-author'
+									>
 										add Author
 									</Button>
 								</StyledAuthorsList>
@@ -280,7 +283,10 @@ const CourseForm = ({
 							return (
 								<StyledAuthorsList key={author.id}>
 									<div>{author.name}</div>
-									<Button onClick={() => removeAuthorToList(author)}>
+									<Button
+										onClick={(() => removeAuthorToList(author), onClick)}
+										data-testid='delete-author'
+									>
 										delete Author
 									</Button>
 								</StyledAuthorsList>
