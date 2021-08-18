@@ -5,7 +5,6 @@ import { MemoryRouter } from 'react-router-dom';
 import configureStore from 'redux-mock-store';
 
 import { render, fireEvent } from '@testing-library/react';
-import { act } from 'react-dom/test-utils';
 
 const middlewares = [];
 const mockStore = configureStore(middlewares);
@@ -181,12 +180,35 @@ test('It should keep a $ in front of the input', async () => {
 	expect(buttonCreateAuthor).toHaveTextContent('create author');
 	fireEvent.click(buttonCreateAuthor);
 	expect(handleClick).toHaveBeenCalledTimes(1);
+	store.dispatch({ type: 'ADD_AUTHOR', payload: 'New Author' });
 
 	expect(buttonAddAuthor).toHaveTextContent('add Author');
 	fireEvent.click(buttonAddAuthor);
 	expect(handleClick).toHaveBeenCalledTimes(2);
+	store.dispatch({
+		type: 'ADD_AUTHOR',
+		payload: { name: 'author', id: '9b87e8b8-6ba5-40fc-a439-c4e30a373d36' },
+	});
 
 	expect(buttonDeleteAuthor).toHaveTextContent('delete Author');
 	fireEvent.click(buttonDeleteAuthor);
 	expect(handleClick).toHaveBeenCalledTimes(3);
+	store.dispatch({
+		type: 'DELETE_AUTHOR',
+		payload: { name: 'author', id: '9b87e8b8-6ba5-40fc-a439-c4e30a373d36' },
+	});
+
+	const expectedActions = [
+		{ type: 'RESET_AUTHOR_FORM' },
+		{ type: 'ADD_AUTHOR', payload: 'New Author' },
+		{
+			type: 'ADD_AUTHOR',
+			payload: { name: 'author', id: '9b87e8b8-6ba5-40fc-a439-c4e30a373d36' },
+		},
+		{
+			type: 'DELETE_AUTHOR',
+			payload: { name: 'author', id: '9b87e8b8-6ba5-40fc-a439-c4e30a373d36' },
+		},
+	];
+	expect(store.getActions()).toEqual(expectedActions);
 });
