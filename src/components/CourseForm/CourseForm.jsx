@@ -65,6 +65,7 @@ const CourseForm = ({
 	resetForm,
 	enabledAuthors,
 	resetAuthorForm,
+	onClick,
 }) => {
 	const [authorInput, setAuthorInput] = useState('');
 	const [duration, setDuration] = useState('');
@@ -238,17 +239,23 @@ const CourseForm = ({
 								placeholder='Enter author name'
 								value={authorInput}
 								onChange={handleAuthorInput}
+								aria-label='cost-input'
 							/>
 						</div>
-						<Button onClick={addAuthor}>create author</Button>
+						<Button onClick={(addAuthor, onClick)} data-testid='create-author'>
+							create author
+						</Button>
 					</StyledLeftColumn>
 					<StyledRightColumn>
 						<div>Authors</div>
 						{enabledAuthors.map((author) => {
 							return (
 								<StyledAuthorsList key={author.id}>
-									<div>{author.name}</div>
-									<Button onClick={(e) => addAuthorToList(e, author)}>
+									<div className='author-name'>{author.name}</div>
+									<Button
+										onClick={((e) => addAuthorToList(e, author), onClick)}
+										data-testid='add-author'
+									>
 										add Author
 									</Button>
 								</StyledAuthorsList>
@@ -276,7 +283,10 @@ const CourseForm = ({
 							return (
 								<StyledAuthorsList key={author.id}>
 									<div>{author.name}</div>
-									<Button onClick={() => removeAuthorToList(author)}>
+									<Button
+										onClick={(() => removeAuthorToList(author), onClick)}
+										data-testid='delete-author'
+									>
 										delete Author
 									</Button>
 								</StyledAuthorsList>

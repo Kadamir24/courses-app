@@ -27,7 +27,7 @@ const StyledSearch = styled.div`
 	height: 30%;
 `;
 
-const ButtonAdd = styled.button`
+export const ButtonAdd = styled.button`
 	background-color: white;
 	color: black;
 	border: 2px solid #4caf50;
@@ -38,7 +38,7 @@ const ButtonAdd = styled.button`
 	}
 `;
 
-const Courses = () => {
+const Courses = ({ onClick }) => {
 	const [search, setSearch] = useState('');
 	const [curInput, setCurInput] = useState('');
 	const courses = useSelector((state) => state.courses.courses);
@@ -77,7 +77,13 @@ const Courses = () => {
 					</StyledSearch>
 					{admin === 'admin' ? (
 						<Link to={`/courses/add`}>
-							<ButtonAdd>Add course</ButtonAdd>
+							<ButtonAdd
+								className='add-course'
+								data-testid='add-course'
+								onClick={onClick}
+							>
+								Add course
+							</ButtonAdd>
 						</Link>
 					) : (
 						''
